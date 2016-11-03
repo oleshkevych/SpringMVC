@@ -15,6 +15,8 @@ public class Animal {
     private int age;
     private int price;
     private boolean alive;
+    private String imagePath;
+
 
 
     @Enumerated
@@ -76,6 +78,14 @@ public class Animal {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public int getPrice() {

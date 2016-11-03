@@ -16,6 +16,7 @@ public interface AnimalService {
     List<Animal> findByType(AnimalType animalType);
     List<Animal> findAlive();
     List<Animal> findKilled();
+    Animal getOldest(String name);
 
 
 }

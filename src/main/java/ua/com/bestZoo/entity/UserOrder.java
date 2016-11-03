@@ -3,6 +3,7 @@ package ua.com.bestZoo.entity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Created by vov4ik on 11/2/2016.
@@ -16,11 +17,11 @@ public class UserOrder {
 
     @Enumerated
     private OrderType orderType;
-    private int price = 0;
+    private int price;
     private LocalDateTime date;
     @Enumerated
     private Weapon weapon;
-    private String animal;
+    private String animals;
     private int timeOfMeeting;
     private int distance;
 
@@ -30,46 +31,50 @@ public class UserOrder {
     public UserOrder() {
     }
 
-    public UserOrder(OrderType orderType, String date, Weapon weapon, Animal animal, int timeOfMeeting, User user, int distance, boolean isFree) {
+    public UserOrder(OrderType orderType, String date, Weapon weapon, List<Animal> animals, int timeOfMeeting, User user, int distance, boolean isFree) {
         this.orderType = orderType;
         this.date = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.weapon = weapon;
-        this.animal = animal.getName();
+        this.animals = "";
         this.timeOfMeeting = timeOfMeeting;
         this.user = user;
         this.distance = distance;
+        this.price = 0;
+        for(Animal a:animals) {
+            this.animals +=(a.getName()+" ");
 
-        if(orderType == OrderType.MEETING){
-            price += 500;
-            user.setMeetinger(true);
-        }else if(orderType == OrderType.SUICIDE){
-            price += 2000;
-            user.setSuicide(true);
-        }else if(orderType == OrderType.HUNT){
-            price = animal.getPrice();
-            price += 1000;
-            if(animal.getAnimalType() == AnimalType.CHEEP){
-                price += 100;
-            }else if(animal.getAnimalType() == AnimalType.AVERAGE){
+            if (orderType == OrderType.MEETING) {
                 price += 500;
-            }else if(animal.getAnimalType() == AnimalType.EXPANSIVE){
-                price += 1500;
+                user.setMeetinger(true);
+            } else if (orderType == OrderType.SUICIDE) {
+                price += 2000;
+                user.setSuicide(true);
+            } else if (orderType == OrderType.HUNT) {
+                price = a.getPrice();
+                price += 1000;
+                if (a.getAnimalType() == AnimalType.CHEEP) {
+                    price += 100;
+                } else if (a.getAnimalType() == AnimalType.AVERAGE) {
+                    price += 500;
+                } else if (a.getAnimalType() == AnimalType.EXPANSIVE) {
+                    price += 1500;
+                }
+                user.setHunter(true);
+            } else if (orderType == OrderType.FEED) {
+                price = a.getPrice();
+                price += 2000;
+                if (a.getAnimalType() == AnimalType.CHEEP) {
+                    price += 100;
+                } else if (a.getAnimalType() == AnimalType.AVERAGE) {
+                    price += 500;
+                } else if (a.getAnimalType() == AnimalType.EXPANSIVE) {
+                    price += 1500;
+                }
+                user.setFeeder(true);
+                user.setQuantityFeeds(user.getQuantityFeeds() + 1);
             }
-            user.setHunter(true);
-        }else if(orderType == OrderType.FEED){
-            price = animal.getPrice();
-            price += 2000;
-            if(animal.getAnimalType() == AnimalType.CHEEP){
-                price += 100;
-            }else if(animal.getAnimalType() == AnimalType.AVERAGE){
-                price += 500;
-            }else if(animal.getAnimalType() == AnimalType.EXPANSIVE){
-                price += 1500;
-            }
-            user.setFeeder(true);
-            user.setQuantityFeeds(user.getQuantityFeeds()+1);
+
         }
-
         if(weapon == Weapon.KNIF){
             price += 100;
             if(isFree){
@@ -187,12 +192,12 @@ public class UserOrder {
         this.weapon = weapon;
     }
 
-    public String getAnimal() {
-        return animal;
+    public String getAnimals() {
+        return animals;
     }
 
-    public void setAnimal(String animal) {
-        this.animal = animal;
+    public void setAnimals(String animal) {
+        this.animals = animal;
     }
 
     public int getTimeOfMeeting() {
@@ -227,7 +232,7 @@ public class UserOrder {
                 ", price=" + price +
                 ", date=" + date +
                 ", weapon=" + weapon +
-                ", animal='" + animal + '\'' +
+                ", animal='" + animals + '\'' +
                 ", timeOfMeeting=" + timeOfMeeting +
                 ", distance=" + distance +
                 ", user=" + user +

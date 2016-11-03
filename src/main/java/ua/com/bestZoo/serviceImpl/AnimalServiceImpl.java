@@ -35,13 +35,23 @@ public class AnimalServiceImpl implements AnimalService {
         return findAll().stream().filter(a -> a.getAnimalType() == animalType).collect(Collectors.toList());
     }
 
-    @Override
     public List<Animal> findAlive() {
         return findAll().stream().filter(Animal::isAlive).collect(Collectors.toList());
     }
 
-    @Override
     public List<Animal> findKilled() {
         return findAll().stream().filter(Animal::isKilled).collect(Collectors.toList());
+    }
+
+    public Animal getOldest(String name){
+        int age = 0;
+        Animal result = new Animal();
+        for(Animal a: findAll()){
+            if (a.getName().equals(name)&&a.getAge()>age){
+                result = a;
+                age = a.getAge();
+            }
+        }
+        return result;
     }
 }
