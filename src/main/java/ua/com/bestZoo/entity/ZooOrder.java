@@ -17,6 +17,7 @@ public class ZooOrder {
     private int age;
     private int price;
     private LocalDateTime date;
+    private boolean completed;
     @Enumerated
     private AnimalType animalType;
     @ManyToOne(fetch=FetchType.EAGER)
@@ -32,6 +33,7 @@ public class ZooOrder {
         this.price = price;
         this.date = date;
         this.animalType = animalType;
+        this.completed = false;
     }
 
     public int getId() {
@@ -40,6 +42,14 @@ public class ZooOrder {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     public String getName() {
