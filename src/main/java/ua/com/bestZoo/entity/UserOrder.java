@@ -24,6 +24,7 @@ public class UserOrder {
     private String animals;
     private int timeOfMeeting;
     private int distance;
+    private boolean newOrder;
 
     @ManyToOne(fetch=FetchType.EAGER)
     private User user;
@@ -40,6 +41,7 @@ public class UserOrder {
         this.user = user;
         this.distance = distance;
         this.price = 0;
+        this.newOrder = true;
         for(Animal a:animals) {
             this.animals +=(a.getName()+" ");
 
@@ -190,6 +192,14 @@ public class UserOrder {
 
     public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
+    }
+
+    public boolean isNewOrder() {
+        return newOrder;
+    }
+
+    public void setNewOrder(boolean newOrder) {
+        this.newOrder = newOrder;
     }
 
     public String getAnimals() {

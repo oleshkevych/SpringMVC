@@ -7,34 +7,34 @@
     <!-- Bootstrap -->
     <link href="resources/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="resources/bootstrap-3.3.7/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 </head>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="resources/bootstrap-3.3.7/js/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <body>
 <div id="page">
     <div id="header">
         <div id="logo">
-            <img src="resources/images/logo.jpg" alt="The Analog Specialists"/>
+            <a href="#">
+                <img src="resources/images/logo.jpg" alt="The Analog Specialists"/>
+            </a>
         </div>
         <div class="navbarLists">
             <div>
                 <ul class="nav nav-pills">
-                    <li role="presentation" class="active"><a href="#">Home</a></li>
-                    <li role="presentation"><a href="#">For Sale</a></li>
-                    <li role="presentation"><a href="#">Help us</a></li>
-                    <li role="presentation"><a href="#">About</a></li>
-                    <li role="presentation"><a href="#">Contact</a></li>
-                </ul>
-                <ul class="nav nav-pills" id="login">
-                    <li role="presentation"><a href="#">Log In</a></li>
-                    <li role="presentation"><a href="#">Registration</a></li>
+                    <li role="presentation" class="active footerList"><a href="#">Home</a></li>
+                    <li role="presentation" class="footerList"><a href="#">For Sale</a></li>
+                    <li role="presentation" class="footerList"><a href="#">Help us</a></li>
+                    <li role="presentation" class="footerList"><a href="#">About</a></li>
+                    <li role="presentation" class="footerList"><a href="#">Contact</a></li>
+                    <li role="presentation" class="footerList"><a href="#">Log In</a></li>
+                    <li role="presentation" class="footerList"><a href="#">Registration</a></li>
 
                 </ul>
 
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6" id="searchBar">
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="Search for...">
                     <span class="input-group-btn">
@@ -49,16 +49,21 @@
         <div id="mainImage">
             <a href="#"><img style="width: 100%" src="resources/images/baobao.jpg" alt="Articles"></a>
             <div id="mainImageDescription">
-                <p id="mainImageDescriptionText">Learn more about our animals!</p>
+                <a href="#"><p id="mainImageDescriptionText">Learn more about our animals!</p></a>
             </div>
             <p></p>
         </div>
 
         <div id="animalGallery">
             <ul class="nav nav-pills">
-                <li role="presentation"class="imgList"><a href="#"> <img class="imgList" src="resources/images/panda.png" alt="panda"></a></li>
-                <li role="presentation"class="imgList"><a href="#"><img class="imgList" src="resources/images/ape.png" alt="ape"></a></li>
-                <li role="presentation"class="imgList"><a href="#"><img class="imgList" src="resources/images/polarBear.png" alt="polar bear"></a></li>
+                <li role="presentation" class="imgList"><a href="#"> <img class="imgList"
+                                                                          src="resources/images/panda.png" alt="panda"></a>
+                </li>
+                <li role="presentation" class="imgList"><a href="#"><img class="imgList" src="resources/images/ape.png"
+                                                                         alt="ape"></a></li>
+                <li role="presentation" class="imgList"><a href="#"><img class="imgList"
+                                                                         src="resources/images/polarBear.png"
+                                                                         alt="polar bear"></a></li>
             </ul>
         </div>
     </div>
@@ -67,17 +72,23 @@
         <div id="partners">
             <div> Our partners:</div>
             <ul class="nav nav-pills">
-                <li role="presentation"class="imgList"><a href="#"><img class="imgListPartners" src="resources/images/cocacola.jpg" alt="coca cola"></a></li>
-                <li role="presentation"class="imgList"><a href="#"><img class="imgListPartners" src="resources/images/timeToEat.jpg" alt="time to eat"></a></li>
-                <li role="presentation"class="imgList"><a href="#"><img class="imgListPartners" src="resources/images/weaponM.jpg" alt="sponsor"></a></li>
+                <li role="presentation" class="imgList"><a href="#"><img class="imgListPartners"
+                                                                         src="resources/images/cocacola.jpg"
+                                                                         alt="coca cola"></a></li>
+                <li role="presentation" class="imgList"><a href="#"><img class="imgListPartners"
+                                                                         src="resources/images/timeToEat.jpg"
+                                                                         alt="time to eat"></a></li>
+                <li role="presentation" class="imgList"><a href="#"><img class="imgListPartners"
+                                                                         src="resources/images/weaponM.jpg"
+                                                                         alt="sponsor"></a></li>
             </ul>
 
         </div>
         <div id="">
             <ul class="nav nav-pills">
-                <li role="presentation"class="footerList"><a href="#"> <p>Contact us</p></a></li>
-                <li role="presentation"class="footerList"><a href="#"> <p>Careers</p></a></li>
-                <li role="presentation"class="footerList"><a href="#"> <p>Private police</p></a></li>
+                <li role="presentation" class="footerList"><a href="#"><p>Contact us</p></a></li>
+                <li role="presentation" class="footerList"><a href="#"><p>Careers</p></a></li>
+                <li role="presentation" class="footerList"><a href="#"><p>Private police</p></a></li>
             </ul>
         </div>
     </div>

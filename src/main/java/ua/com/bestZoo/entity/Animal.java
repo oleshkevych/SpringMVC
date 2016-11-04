@@ -16,6 +16,7 @@ public class Animal {
     private int price;
     private boolean alive;
     private String imagePath;
+    private boolean forSale;
 
 
 
@@ -28,12 +29,13 @@ public class Animal {
     public Animal() {
     }
 
-    public Animal(String name, String description, int age, int price, AnimalType animalType) {
+    public Animal(String name, String description, int age, int price, AnimalType animalType, boolean forSale) {
         this.name = name;
         this.description = description;
         this.age = age;
         this.price = price;
         this.animalType = animalType;
+        this.forSale = forSale;
     }
 
     public boolean isAlive() {
@@ -70,6 +72,14 @@ public class Animal {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isForSale() {
+        return forSale;
+    }
+
+    public void setForSale(boolean forSale) {
+        this.forSale = forSale;
     }
 
     public int getAge() {
