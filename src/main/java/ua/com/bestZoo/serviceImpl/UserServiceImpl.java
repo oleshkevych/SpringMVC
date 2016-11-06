@@ -16,14 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.bestZoo.entity.Role;
 import ua.com.bestZoo.entity.User;
 import ua.com.bestZoo.entity.UserRole;
+import ua.com.bestZoo.entity.Zoo;
 import ua.com.bestZoo.repository.UserRepository;
+import ua.com.bestZoo.repository.ZooRepository;
 import ua.com.bestZoo.service.UserService;
+import ua.com.bestZoo.service.ZooService;
 
 @Service("userDetailsService")
 public class UserServiceImpl  implements UserService, UserDetailsService{
 
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private ZooRepository zooRepository;
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
@@ -31,6 +36,11 @@ public class UserServiceImpl  implements UserService, UserDetailsService{
 	public void save(User user){
 		user.setRole(Role.ROLE_USER);
 		user.setPassword(encoder.encode(user.getPassword()));
+
+		if(zooRepository.findAll().size()==0){
+			zooRepository.save(new Zoo(100));
+		}
+		user.setZoo(zooRepository.findOne(1));
 		userRepository.save(user);
 	}
 

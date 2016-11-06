@@ -23,7 +23,7 @@ public class Animal {
     @Enumerated
     private AnimalType animalType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Zoo zoo;
 
     public Animal() {

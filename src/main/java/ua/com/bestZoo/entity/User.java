@@ -9,6 +9,7 @@ import javax.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ua.com.bestZoo.service.ZooService;
 
 @Entity
 public class User implements UserDetails {
@@ -19,13 +20,13 @@ public class User implements UserDetails {
 	private String username;
 	private	String phoneNumber;
 	private String password;
-	private	String email;
-	private int bonuses;
-	private int quantityActions;
-	private boolean isSuicide;
-	private boolean isFeeder;
-	private boolean isHunter;
-	private boolean isMeetinger;
+    private	String email;
+    private int bonuses;
+    private int quantityActions;
+    private boolean isSuicide;
+    private boolean isFeeder;
+    private boolean isHunter;
+    private boolean isMeetinger;
 	private int quantityFeeds;
 
 	@Enumerated
@@ -36,14 +37,41 @@ public class User implements UserDetails {
 
 	private String pathImage;
 
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="user")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="user")
 	private List<UserOrder> userOrders;
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne
 	private Zoo zoo;
+
+    public User(String username, String phoneNumber, String password, String email) {
+        super();
+        this.username = username;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.email = email;
+        bonuses = 0;
+        quantityActions = 0;
+        isSuicide = false;
+        isFeeder = false;
+        isHunter = false;
+        isMeetinger = false;
+        quantityFeeds = 0;
+        userRole = UserRole.NOTENOUGHSMART;
+        pathImage = "";
+        role = Role.ROLE_USER;
+		userOrders = new ArrayList<>();
+    }
 
 	public User() {
 		super();
+	}
+
+	public Zoo getZoo() {
+		return zoo;
+	}
+
+	public void setZoo(Zoo zoo) {
+		this.zoo = zoo;
 	}
 
 	public List<UserOrder> getUserOrders() {
@@ -122,6 +150,7 @@ public class User implements UserDetails {
 		this.bonuses = bonuses;
 	}
 
+
 	public String getPathImage() {
 		return pathImage;
 	}
@@ -130,7 +159,6 @@ public class User implements UserDetails {
 	public void setPathImage(String pathImage) {
 		this.pathImage = pathImage;
 	}
-
 
 	public String userName(){
 		return username;
@@ -171,18 +199,6 @@ public class User implements UserDetails {
 	public int getId() {
 		return id;
 	}
-
-	public User(String username, String phoneNumber, String password, String email) {
-		super();
-		this.username = username;
-		this.phoneNumber = phoneNumber;
-		this.password = password;
-		this.email = email;
-	}
-
-
-
-
 
 	public Role getRole() {
 		return role;
@@ -230,52 +246,8 @@ public class User implements UserDetails {
 	}
 
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + id;
-		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
-		result = prime * result + ((role == null) ? 0 : role.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
-		return result;
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (id != other.id)
-			return false;
-		if (phoneNumber == null) {
-			if (other.phoneNumber != null)
-				return false;
-		} else if (!phoneNumber.equals(other.phoneNumber))
-			return false;
-		if (role != other.role)
-			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
-		return true;
-	}
-
-
-
-
-
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

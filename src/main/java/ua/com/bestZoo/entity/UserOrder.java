@@ -26,7 +26,7 @@ public class UserOrder {
     private int distance;
     private boolean newOrder;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne
     private User user;
 
     public UserOrder() {
@@ -108,9 +108,9 @@ public class UserOrder {
             }
         }else if(weapon == Weapon.BAZOOKA){
             price += 1500;
-            if(distance<50){
+            if(distance<=50){
                 price += 1000;
-            }else if(distance<500){
+            }else if(distance<=500){
                 price += 500;
             }else if(distance>500){
                 price += 2000;
@@ -134,20 +134,18 @@ public class UserOrder {
 
         price -= user.getBonuses();
 
-        if(price<1000){
+        if(price<=1000){
             user.setBonuses(50);
-        }else if(price<1500){
+        }else if(price<=1500){
             user.setBonuses(100);
-        }else if(price<5000){
+        }else if(price<=5000){
             user.setBonuses(200);
         }else if(price>5000){
             user.setBonuses(500);
         }
-        if(user.getQuantityFeeds()>1){
-            user.setBonuses(100);
-        }else if(user.getQuantityFeeds()<2){
+        if(user.getQuantityFeeds()<=2){
             user.setBonuses(400);
-        }else if(user.getQuantityFeeds()<5){
+        }else if(user.getQuantityFeeds()<=5){
             user.setBonuses(600);
         }else if(user.getQuantityFeeds()>5){
             user.setBonuses(800);

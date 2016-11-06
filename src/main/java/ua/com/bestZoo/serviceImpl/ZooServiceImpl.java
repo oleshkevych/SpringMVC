@@ -16,12 +16,13 @@ import java.util.List;
 @Service
 public class ZooServiceImpl implements ZooService {
 
-    private final ZooRepository zooRepository;
-
     @Autowired
-    public ZooServiceImpl(ZooRepository zooRepository) {
-        this.zooRepository = zooRepository;
-    }
+    private ZooRepository zooRepository;
+
+
+//    public ZooServiceImpl(ZooRepository zooRepository) {
+//        this.zooRepository = zooRepository;
+//    }
 
     public int findEmptyCages() {
         //TODO:
@@ -29,13 +30,29 @@ public class ZooServiceImpl implements ZooService {
         return z.getQuantityCages() - z.getAnimals().size();
     }
 
+    @Override
+    public Zoo fetchZooUsers() {
+        return zooRepository.fetchZooUsers(1);
+    }
+
+    @Override
+    public Zoo fetchZooAnimals() {
+        return zooRepository.fetchZooAnimals(1);
+    }
+
+    @Override
+    public Zoo fetchZooOrders() {
+        return zooRepository.fetchZooOrders(1);
+    }
+
+
     public Zoo getZooFromDB(){
         return zooRepository.getOne(1);
     }
 
-    public Zoo fetchZooUsers() {
-        return zooRepository.fetchZooUsers(1);
-    }
+//    public Zoo fetchZooUsers() {
+//        return zooRepository.fetchZooUsers(1);
+//    }
 
     public void save(Zoo zoo){
         zooRepository.save(zoo);

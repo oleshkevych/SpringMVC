@@ -1,7 +1,12 @@
 package ua.com.bestZoo.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by vov4ik on 11/2/2016.
@@ -15,13 +20,15 @@ public class Zoo {
     private int quantityCages;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="zoo")
-    private List<User> users;
+    @Fetch(value = FetchMode.SUBSELECT)
+    private Set<User> users;
 
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="zoo")
-    private List<ZooOrder> zooOrders;
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="zoo")
+    @Fetch(value = FetchMode.SUBSELECT)
+    private Set<ZooOrder> zooOrders;
 
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="zoo")
-    private List<Animal> animals;
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="zoo")
+    private Set<Animal> animals;
 
 
     public Zoo() {
@@ -29,6 +36,9 @@ public class Zoo {
 
     public Zoo(int quantityCages) {
         this.quantityCages = quantityCages;
+        animals = new LinkedHashSet<>();
+        users = new LinkedHashSet<>();
+        zooOrders = new LinkedHashSet<>();
     }
 
     public int getId() {
@@ -47,27 +57,27 @@ public class Zoo {
         this.quantityCages = quantityCages;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 
-    public List<ZooOrder> getZooOrders() {
+    public Set<ZooOrder> getZooOrders() {
         return zooOrders;
     }
 
-    public void setZooOrders(List<ZooOrder> zooOrders) {
+    public void setZooOrders(Set<ZooOrder> zooOrders) {
         this.zooOrders = zooOrders;
     }
 
-    public List<Animal> getAnimals() {
+    public Set<Animal> getAnimals() {
         return animals;
     }
 
-    public void setAnimals(List<Animal> animals) {
+    public void setAnimals(Set<Animal> animals) {
         this.animals = animals;
     }
 

@@ -15,6 +15,9 @@ public class ActiveUser {
 
     private List<UserOrder> meetings;
 
+    private UserRole userRole;
+
+
     public User getUser() {
         return user;
     }
@@ -47,7 +50,16 @@ public class ActiveUser {
         this.meetings = meetings;
     }
 
-    public ActiveUser() {
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+    public ActiveUser(UserRole r) {
+        this.userRole = r;
     }
 
     public ActiveUser(User user) {

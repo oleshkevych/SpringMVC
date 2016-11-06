@@ -20,7 +20,7 @@ public class ZooOrder {
     private boolean completed;
     @Enumerated
     private AnimalType animalType;
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne
     private Zoo zoo;
 
     public ZooOrder() {

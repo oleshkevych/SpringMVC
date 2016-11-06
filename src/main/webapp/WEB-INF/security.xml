@@ -7,13 +7,17 @@
     <import resource="appContext.xml"/>
 
     <security:http>
-        <security:form-login login-page="/loginpage" login-processing-url="/loginprocesing" authentication-success-forward-url="/home"/>
+        <security:form-login login-page="/login" login-processing-url="/loginprocesing" authentication-success-forward-url="/loggedIn"/>
+
 
         <security:intercept-url pattern="/admin" method="GET" access="ROLE_ADMIN"/>
+        <security:intercept-url pattern="/loginH" access="permitAll" />
+        <security:intercept-url pattern="/login" access="permitAll" />
 
-        <security:intercept-url pattern="/" access="permitAll()"/>
+        <security:intercept-url pattern="/h" access="permitAll()"/>
 
         <security:logout logout-url="/logout" logout-success-url="/"/>
+
     </security:http>
 
     <security:global-method-security secured-annotations="enabled"/>

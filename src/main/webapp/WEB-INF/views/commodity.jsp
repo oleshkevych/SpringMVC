@@ -29,8 +29,8 @@
 	</select>
 	<button>select</button>
 	</sf:form>
-	
-		<%-- <form action="newCommodity" method="post">
+
+		 <form action="newCommodity" method="post">
 			<input name="nameCommodity" placeholder="commodity name"/>
 			<br>
 			<br>
@@ -38,13 +38,13 @@
 			<br>
 			<br>
 			<button>save Commodity</button>
-		</form> --%>
-		
+		</form>
+
 		<sf:form modelAttribute="commodity" action="newCommodity" method="post">
 		    <sf:input path="name" placeholder="commodity name"/>
 			<br>
 			<br>
-			
+
 			<sf:input path="price" placeholder="commodity price"/>
 			<br>
 			<br>
