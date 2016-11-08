@@ -116,6 +116,10 @@ ${user}
                                         </sf:form>
                                     </li>
                                 </sec:authorize>
+                                <sec:authorize access="hasRole('ROLE_ADMIN')" >
+                                    <li role="presentation" class="footerList" style="margin: auto;"><a href="admin">Admin</a>
+                                    </li>
+                                </sec:authorize>
 
                             </ul>
 
@@ -132,6 +136,19 @@ ${user}
                 </div>
 
                 <div id="container">
+                    <div>path=${pageContext.request.contextPath}
+                        <br>
+                        path1 = <%= request.getContextPath()%>
+                        <br>
+                        <img src="<%= request.getContextPath() %>/Resources/1.jpg" />
+                        <br>
+                        path2= <%=System.getProperty("catalina.home")%>/Resources/1.jpg
+                        <br>
+                        <img src="<%=System.getProperty("catalina.home")%>/Resources/1.jpg" />
+
+                        <br>
+
+                    </div>
                     <div id="mainImage">
                         <a href="textFormForAllQuestions"><img style="width: 100%" src="resources/images/baobao.jpg"
                                                                alt="Articles"></a>

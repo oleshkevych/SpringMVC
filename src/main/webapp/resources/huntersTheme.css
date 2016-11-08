@@ -13,7 +13,9 @@
 #headerH>.navbarLists>div>ul>.footerList>a{
     color: rgb(0, 0, 0);
 }
-
+#headerH>.navbarLists>div>ul>.footerList>form>button{
+    color: rgb(0, 0, 0);
+}
 #footerH{
     padding: 20px;
     background-color: rgba(99, 0, 17, 0.94);

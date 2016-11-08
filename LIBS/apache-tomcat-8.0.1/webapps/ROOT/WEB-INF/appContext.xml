@@ -28,7 +28,8 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
     
-    <bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
+    <bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
+    <bean id="activeUser" class="ua.com.bestZoo.beans.ActiveUser"/>
 
 </beans>

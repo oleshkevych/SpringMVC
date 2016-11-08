@@ -1,10 +1,17 @@
-package ua.com.bestZoo.entity;
+package ua.com.bestZoo.beans;
+
+import org.springframework.stereotype.Component;
+import ua.com.bestZoo.entity.Role;
+import ua.com.bestZoo.entity.User;
+import ua.com.bestZoo.entity.UserOrder;
+import ua.com.bestZoo.entity.UserRole;
 
 import java.util.List;
 
 /**
  * Created by vov4ik on 11/2/2016.
  */
+@Component
 public class ActiveUser {
 
     private User user;
@@ -17,6 +24,18 @@ public class ActiveUser {
 
     private UserRole userRole;
 
+    private Role role;
+
+    public ActiveUser() {
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public User getUser() {
         return user;
@@ -58,14 +77,6 @@ public class ActiveUser {
         this.userRole = userRole;
     }
 
-    public ActiveUser(UserRole r) {
-        this.userRole = r;
-    }
-
-    public ActiveUser(User user) {
-        this.user = user;
-        //TODO: create lists of orders;
-    }
 
     @Override
     public String toString() {

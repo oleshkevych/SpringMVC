@@ -45,6 +45,11 @@ public class ZooServiceImpl implements ZooService {
         return zooRepository.fetchZooOrders(1);
     }
 
+    @Override
+    public List<Zoo> findAll() {
+        return zooRepository.findAll();
+    }
+
 
     public Zoo getZooFromDB(){
         return zooRepository.getOne(1);

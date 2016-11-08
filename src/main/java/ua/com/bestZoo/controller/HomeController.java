@@ -1,18 +1,17 @@
 package ua.com.bestZoo.controller;
 
 import java.security.Principal;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
-import ua.com.bestZoo.entity.ActiveUser;
+import ua.com.bestZoo.beans.ActiveUser;
+import ua.com.bestZoo.entity.Role;
 import ua.com.bestZoo.entity.User;
 
 import ua.com.bestZoo.entity.UserRole;
@@ -21,6 +20,7 @@ import ua.com.bestZoo.service.UserService;
 @Controller
 public class HomeController {
 
+    @Autowired
     private ActiveUser activeUser;
 //	@Autowired
 //	private CommodityService commodityService;
@@ -61,21 +61,27 @@ public class HomeController {
     }
 	@RequestMapping(value={"/logout"}, method=RequestMethod.POST)
 	public String logout(){
+        if(activeUser.getRole() != Role.ROLE_ADMIN) {
+            userService.save(activeUser.getUser());
+        }
 		return "redirect:/h";
 	}
 	@RequestMapping(value="/h", method=RequestMethod.GET)
 	public String home(Principal principal, Model model) {
 
 		try {
-            String userLoginNumber = principal.getName();
-            if(!userLoginNumber.equals("admin")) {
-                User user = userService.fetchUser(Integer.parseInt(userLoginNumber));
+//            String userLoginNumber = principal.getName();
+//            if(!userLoginNumber.equals("admin")) {
+//                User user = userService.fetchUser(Integer.parseInt(userLoginNumber));
+//
+//                model.addAttribute("userRoleText", user.getUserRole().getTexts());
+//            }else{
+//                model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
+//            }
 
-                model.addAttribute("userRoleText", user.getUserRole().getTexts());
-            }else{
-                model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
-            }
-		}catch (NullPointerException e){
+            model.addAttribute("userRoleText", activeUser.getUserRole().getTexts());
+
+        }catch (NullPointerException e){
             model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
 		}
 		return "home";
@@ -102,9 +108,11 @@ public class HomeController {
 	public String forSale(Principal principal, Model model) {
 
         try {
-            User user = userService.fetchUser(Integer.parseInt(principal.getName()));
+//            User user = userService.fetchUser(Integer.parseInt(principal.getName()));
+//
+//            model.addAttribute("userRoleText", user.getUserRole().getTexts());
+            model.addAttribute("userRoleText", activeUser.getUserRole().getTexts());
 
-            model.addAttribute("userRoleText", user.getUserRole().getTexts());
         }catch (NullPointerException e){
             model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
         }
@@ -114,19 +122,27 @@ public class HomeController {
 	public String textFormForAllQuestions(Principal principal, Model model) {
 
         try {
-            User user = userService.fetchUser(Integer.parseInt(principal.getName()));
+//            User user = userService.fetchUser(Integer.parseInt(principal.getName()));
+//
+//            model.addAttribute("userRoleText", user.getUserRole().getTexts());
+            model.addAttribute("userRoleText", activeUser.getUserRole().getTexts());
 
-            model.addAttribute("userRoleText", user.getUserRole().getTexts());
         }catch (NullPointerException e){
             model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
         }
 		return "textFormForAllQuestions";
 	}
-	@RequestMapping(value={"/loginPage"}, method=RequestMethod.POST)
-	public String loginPage(){
-        activeUser = new ActiveUser(UserRole.NOTENOUGHSMART);
-		return "login";
-	}
+	@RequestMapping(value={"/loginPage", "/login"}, method=RequestMethod.POST)
+    public String loginPage(){
+        activeUser.setUserRole(UserRole.NOTENOUGHSMART);
+        return "login";
+    }
+    @RequestMapping(value={"/login"}, method=RequestMethod.GET)
+    public String loginR(){
+        activeUser.setUserRole(UserRole.NOTENOUGHSMART);
+        return "login";
+    }
+
 
 	@RequestMapping(value={"/registration"}, method=RequestMethod.POST)
 	public String registration(Model model){
@@ -141,45 +157,32 @@ public class HomeController {
 		return "registration";
 	}
 
-	@RequestMapping(value={"/addOrder"}, method=RequestMethod.POST)
-	public String addOrder(Principal principal, Model model) {
-
-        try {
-            User user = userService.fetchUser(Integer.parseInt(principal.getName()));
-
-            model.addAttribute("userRoleText", user.getUserRole().getTexts());
-        }catch (NullPointerException e){
-            model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
-        }
-		return "newOrderUser";
-	}
-	@RequestMapping(value={"/myOrders"}, method=RequestMethod.POST)
-	public String myOrder(Principal principal, Model model) {
-
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            model.addAttribute("userRoleText", user.getUserRole().getTexts());
-        }catch (NullPointerException e){
-            model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
-        }
-		return "userOrders";
-	}
 
     @RequestMapping(value={"/loginKiller"}, method=RequestMethod.GET)
     public String loginK() {
 
-        activeUser = new ActiveUser(UserRole.HUNTER);
+        activeUser.setUserRole(UserRole.HUNTER);
         return "loginH";
     }
     @RequestMapping(value={"/loggedIn"}, method=RequestMethod.POST)
     public String loggedIn(Principal principal) {
-        if(activeUser.getUserRole() == UserRole.HUNTER){
-            User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();//userService.findOneUser(Integer.parseInt(principal.getName()));
-            user.setUserRole(UserRole.HUNTER);
-            userService.save(user);
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if ((user.getUserRole() != UserRole.HUNTER) && (activeUser.getUserRole() == UserRole.HUNTER)) {
+                user.setUserRole(UserRole.HUNTER);
+            }
+            activeUser.setUser(user);
+            activeUser.setUserRole(user.getUserRole());
+        }catch (ClassCastException e){
+            activeUser.setRole(Role.ROLE_ADMIN);
         }
         return "home";
+    }
+    @RequestMapping(value={"/admin"}, method=RequestMethod.GET)
+    public String admin() {
+
+
+        return "admin";
     }
 //    @RequestMapping(value={"/killerLoggedIn"}, method=RequestMethod.POST)
 //    public String loggedInK(Principal principal) {

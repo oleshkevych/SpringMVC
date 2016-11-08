@@ -18,8 +18,6 @@ public class Animal {
     private String imagePath;
     private boolean forSale;
 
-
-
     @Enumerated
     private AnimalType animalType;
 
@@ -29,13 +27,23 @@ public class Animal {
     public Animal() {
     }
 
-    public Animal(String name, String description, int age, int price, AnimalType animalType, boolean forSale) {
+    public Animal(String name, String description, int age, int price, AnimalType animalType, boolean forSale, String imagePath) {
         this.name = name;
         this.description = description;
         this.age = age;
         this.price = price;
         this.animalType = animalType;
         this.forSale = forSale;
+        this.imagePath = imagePath;
+        alive = true;
+    }
+
+    public Zoo getZoo() {
+        return zoo;
+    }
+
+    public void setZoo(Zoo zoo) {
+        this.zoo = zoo;
     }
 
     public boolean isAlive() {

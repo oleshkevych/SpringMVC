@@ -20,6 +20,7 @@ import ua.com.bestZoo.service.UserService;
  
 @Controller
 public class UserController {
+
 	@Autowired
 	private UserService userService;
 
