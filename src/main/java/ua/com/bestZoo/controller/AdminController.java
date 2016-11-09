@@ -2,6 +2,7 @@ package ua.com.bestZoo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +39,19 @@ public class AdminController {
 
     @Autowired
     ZooOrderService zooOrderService;
+
+    @RequestMapping(value={"/admin"}, method=RequestMethod.GET)
+    public String admin(Model model) {
+        model.addAttribute("users", userService.findAll());
+        model.addAttribute("usersHunters", userService.findAllHunters());
+        model.addAttribute("usersFeeders", userService.findAllFeeders());
+        model.addAttribute("usersSuicides", userService.findAllSuicides());
+        model.addAttribute("usersMeetUsers", userService.findAllMeetUsers());
+        model.addAttribute("zooOrders", zooOrderService.findAll());
+        model.addAttribute("orderUsers", userOrderService.findAll());
+
+        return "admin";
+    }
 
     @RequestMapping(value={"/uploadFile"}, method= RequestMethod.POST)
         public @ResponseBody
@@ -111,16 +125,16 @@ public class AdminController {
                 at = AnimalType.EXPANSIVE;
             }
 
-            System.out.println(map.get("forSale"));
-            System.out.println(map.get("forSale").toLowerCase().equals("true"));
+            String forS = map.get("forSale").toLowerCase().replace(" ", "").replace("\n", "");
+
 
 
             Animal animal = new Animal(map.get("name"), map.get("description"), Integer.parseInt(map.get("age")),
-                    Integer.parseInt(map.get("price")), at, (map.get("forSale").toLowerCase().equals("true")), "");
+                    Integer.parseInt(map.get("price")), at, (forS.equals("true")), "");
             String rootPath = System.getProperty("catalina.home");
             File dir = new File(rootPath + File.separator + "Resources");
             File f = dir.listFiles()[dir.listFiles().length-1];
-            animal.setImagePath(dir+"\\"+f.getName());
+            animal.setImagePath("image"+"\\"+f.getName());
             System.out.println(f.getName());
             animalService.save(animal);
             return "Animal was added!."+animal.getImagePath();
@@ -137,4 +151,7 @@ public class AdminController {
 
         return Files.readAllBytes(serverFile.toPath());
     }
+
+
+
 }

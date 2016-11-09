@@ -140,9 +140,9 @@ ${user}
                         <br>
                         path1 = <%= request.getContextPath()%>
                         <br>
-                        <img src="<%= request.getContextPath() %>/Resources/1.jpg" />
+                        <img src="image/1.jpg" />
                         <br>
-                        path2= <%=System.getProperty("catalina.home")%>/Resources/1.jpg
+                        path2=
                         <br>
                         <img src="<%=System.getProperty("catalina.home")%>/Resources/1.jpg" />
 

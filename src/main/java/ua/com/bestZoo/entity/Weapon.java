@@ -6,7 +6,7 @@ package ua.com.bestZoo.entity;
 public enum Weapon {
 
 
-    USERSWEAPON(""),
+    USERSWEAPON("YOU WEAPON"),
     KNIF("You can slaughter free or bound animal"),
     PISTOL ("Shoot the animal from close distance. ATTENTION!!!! You will have only 14 ammo! Don't miss!"),
     M16("This is the great chance to take revenge for all, even for the stolen toy in childhood. You will have enough ammo for this))"),

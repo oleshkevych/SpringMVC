@@ -15,6 +15,7 @@ import ua.com.bestZoo.entity.Role;
 import ua.com.bestZoo.entity.User;
 
 import ua.com.bestZoo.entity.UserRole;
+import ua.com.bestZoo.service.AnimalService;
 import ua.com.bestZoo.service.UserService;
 
 @Controller
@@ -27,6 +28,9 @@ public class HomeController {
 	
 	@Autowired
 	private UserService userService;
+
+    @Autowired
+    private AnimalService animalService;
 	
 //	@RequestMapping(value="/", method=RequestMethod.GET)
 //	public String commodity(Model model){
@@ -105,7 +109,7 @@ public class HomeController {
     }
 
 	@RequestMapping(value="/forSale", method=RequestMethod.GET)
-	public String forSale(Principal principal, Model model) {
+	public String forSale(Model model) {
 
         try {
 //            User user = userService.fetchUser(Integer.parseInt(principal.getName()));
@@ -116,6 +120,7 @@ public class HomeController {
         }catch (NullPointerException e){
             model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
         }
+        model.addAttribute("animals", animalService.findForSale());
 		return "forSale";
 	}
 	@RequestMapping(value="/textFormForAllQuestions", method=RequestMethod.GET)
@@ -178,12 +183,7 @@ public class HomeController {
         }
         return "home";
     }
-    @RequestMapping(value={"/admin"}, method=RequestMethod.GET)
-    public String admin() {
 
-
-        return "admin";
-    }
 //    @RequestMapping(value={"/killerLoggedIn"}, method=RequestMethod.POST)
 //    public String loggedInK(Principal principal) {
 //        User user = userService.fetchUser(Integer.parseInt(principal.getName()));

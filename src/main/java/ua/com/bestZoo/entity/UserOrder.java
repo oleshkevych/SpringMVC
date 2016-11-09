@@ -51,7 +51,7 @@ public class UserOrder {
             } else if (orderType == OrderType.SUICIDE) {
                 price += 2000;
                 user.setSuicide(true);
-            } else if (orderType == OrderType.HUNT) {
+            } else if (orderType == OrderType.HUNTING) {
                 price = a.getPrice();
                 price += 1000;
                 if (a.getAnimalType() == AnimalType.CHEEP) {

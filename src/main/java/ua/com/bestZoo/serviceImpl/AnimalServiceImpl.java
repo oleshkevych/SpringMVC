@@ -55,6 +55,11 @@ public class AnimalServiceImpl implements AnimalService {
         return findAll().stream().filter(Animal::isKilled).collect(Collectors.toList());
     }
 
+
+    public List<Animal> findForSale() {
+        return findAll().stream().filter(Animal::isForSale).collect(Collectors.toList());
+    }
+
     public Animal getOldest(String name){
         int age = 0;
         Animal result = new Animal();
@@ -65,5 +70,10 @@ public class AnimalServiceImpl implements AnimalService {
             }
         }
         return result;
+    }
+
+
+    public Animal findById(int id) {
+        return animalRepository.findOne(id);
     }
 }

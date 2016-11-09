@@ -96,6 +96,7 @@ ${user}
     <div id="container">
 
         <div id="animalGallery">
+
             <ul class="nav nav-pills">
                 <li role="presentation" class="imgList"><img class="imgList"
                                                              src="resources/images/panda.png" alt="panda">
@@ -168,6 +169,34 @@ ${user}
                         non nunc egestas, lacus risus, nunc dictumst quisque pharetra, at litora vulputate magna a urna
                         ullamcorper.
                     </div></li>
+                <c:forEach var="zo" items="${animals }">
+                    <li>
+                    <div class="descriptionPanel">
+                        <div class="dataO">
+                            <img src="${zo.imagePath}" alt="Photo"/>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.name}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.description}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.age}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.animalType}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.price}</p>
+                        </div>
+
+                        <div class="dataO">
+                            <p>Alive: ${zo.alive}</p>
+                        </div>
+                    </div>
+                    </li>
+                </c:forEach>
             </ul>
         </div>
     </div>

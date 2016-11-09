@@ -50,7 +50,7 @@ public class UserOrderServiceImpl implements UserOrderService{
 
     @Override
     public List<UserOrder> findHunts() {
-        return findAll().stream().filter(userOrder -> userOrder.getOrderType() == OrderType.HUNT).collect(Collectors.toList());
+        return findAll().stream().filter(userOrder -> userOrder.getOrderType() == OrderType.HUNTING).collect(Collectors.toList());
 
     }
 

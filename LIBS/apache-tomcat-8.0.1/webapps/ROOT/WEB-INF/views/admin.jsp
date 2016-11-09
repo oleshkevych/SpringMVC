@@ -45,7 +45,7 @@
                     </li>
                     <li role="presentation" class="footerList"><a href="addOrder">Make new order</a>
                     </li>
-                    <li role="presentation" class="active footerList"><a href="myOrders">My orders</a></li>
+                    <li role="presentation" class="footerList active"><a href="admin">My page</a></li>
                     <li role="presentation" class="footerList">
                         <sf:form action="logout" method="post">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -111,14 +111,14 @@
                     <div class="form-group">
                         <p>Enter something about the animal:</p>
                         <div>
-                            <textarea  rows="5"  class="form-control" placeholder="Animal's information"
-                                   aria-describedby="sizing-addon1" id="description"></textarea>
+                            <textarea rows="5" class="form-control" placeholder="Animal's information"
+                                      aria-describedby="sizing-addon1" id="description"></textarea>
                         </div>
                     </div>
                 </div>
 
 
-                </div>
+            </div>
             <div class="wrapper">
                 <!--age-->
                 <div class="container invisible data" id="ageCont">
@@ -126,7 +126,7 @@
                         <p>Enter animal' age:</p>
                         <div class='input-group date'>
                             <input type="text" class="form-control inputAnim" placeholder="Animal's age"
-                                       aria-describedby="sizing-addon1" id="age"/>
+                                   aria-describedby="sizing-addon1" id="age"/>
                         </div>
                     </div>
                 </div>
@@ -164,7 +164,7 @@
                         </ul>
                     </div>
                 </div>
-</div>
+            </div>
             <div class="wrapper">
                 <!--for sale-->
                 <div class="container invisible" id="container-forSale">
@@ -195,16 +195,102 @@
         <button class="btn bg-primary" id="showZooOrders">Zoo Orders</button>
         <div id="zooOrders" class="invisible list-group">
 
+            <div id="zooOrdersCont" class="invisible list-group">
+
+                <c:forEach var="zo" items="${zooOrders }">
+                    <div class="descriptionPanel">
+                        <div class="dataO">
+                            <p> ${zo.name}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.description}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.price}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.age}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.date}</p>
+                        </div>
+
+                        <div class="dataO">
+                            <p> ${zo.animalType}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.completed}</p>
+                        </div>
+                    </div>
+                    <br>
+                </c:forEach>
+            </div>
         </div>
 
         <button class="btn bg-primary" id="showUsers">Users</button>
         <div id="users" class="invisible list-group">
 
+                <c:forEach var="zo" items="${users }">
+                    <div class="descriptionPanel">
+                        <div class="dataO">
+                            <img src="${zo.pathImage}" alt="Photo"/>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.username}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.phoneNumber}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.email}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.bonuses}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.quantityActions}</p>
+                        </div>
+
+                        <div class="dataO">
+                            <p> ${zo.quantityFeeds}</p>
+                        </div>
+                        <div class="dataO">
+                            <p> ${zo.userRole}</p>
+                        </div>
+                    </div>
+                    <br>
+                </c:forEach>
         </div>
 
         <button class="btn bg-primary" id="showOrdersUsers">Users orders</button>
         <div id="ordersUsers" class="invisible list-group">
+            <c:forEach var="zo" items="${orderUsers }">
+                <div class="descriptionPanel">
+                    <div class="dataO">
+                        <p> ${zo.orderType}</p>
+                    </div>
+                    <div class="dataO">
+                        <p> ${zo.date}</p>
+                    </div>
+                    <div class="dataO">
+                        <p> ${zo.price}</p>
+                    </div>
+                    <div class="dataO">
+                        <p> ${zo.weapon}</p>
+                    </div>
+                    <div class="dataO">
+                        <p> ${zo.animals}</p>
+                    </div>
 
+                    <div class="dataO">
+                        <p> ${zo.timeOfMeeting}</p>
+                    </div>
+                    <div class="dataO">
+                        <p> ${zo.distance}</p>
+                    </div>
+                </div>
+                <br>
+            </c:forEach>
         </div>
 
     </div>
@@ -242,8 +328,8 @@
     </div>
 </div>
 
-<input type="hidden" name="csrf_name" value="${_csrf.parameterName}" />
-<input type="hidden" name="csrf_value" value="${_csrf.token}" />
+<input type="hidden" name="csrf_name" value="${_csrf.parameterName}"/>
+<input type="hidden" name="csrf_value" value="${_csrf.token}"/>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -251,53 +337,49 @@
 //add photo
         $("#submit").click(function (event) {
             $("#animalNameCont").removeClass("invisible");
-
-            console.log("$(#file).val()");
             event.preventDefault();
-            console.log($("#file").val());
-                if ($("#file").val().length !== 0) {
-                    var formData = new FormData();
-                    formData.append('file', $('input[type=file]')[0].files[0]);
-                    formData.append('name', $('input[type=file]')[0].files[0].name);
-                    console.log("f"+formData);
+            if ($("#file").val().length !== 0) {
+                var formData = new FormData();
+                formData.append('file', $('input[type=file]')[0].files[0]);
+                formData.append('name', $('input[type=file]')[0].files[0].name);
 
-                        $.ajax({
-                            url : "uploadFile?"+$("input[name=csrf_name]").val()+"="+$("input[name=csrf_value]").val(),
-                            processData : false,
-                            contentType : false,
-                            type : "POST",
-                            data : formData,
-                            success : function(res) {
+                $.ajax({
+                    url: "uploadFile?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                    processData: false,
+                    contentType: false,
+                    type: "POST",
+                    data: formData,
+                    success: function (res) {
 
-                                $("#formUpload").addClass("invisible");
-                                $('#formDelete label span').text(res);
-                                $("#formDelete").removeClass("invisible");
+                        $("#formUpload").addClass("invisible");
+                        $('#formDelete label span').text(res);
+                        $("#formDelete").removeClass("invisible");
 
 
-                            },
-                            error : function(res){
-                                $("#errorUpload").text(res);
-                                $("#errorUpload").removeClass("invisible");
-                                $("#animalNameCont").addClass("invisible");
+                    },
+                    error: function (res) {
+                        $("#errorUpload").text(res);
+                        $("#errorUpload").removeClass("invisible");
+                        $("#animalNameCont").addClass("invisible");
 
-                            }
-                        })
+                    }
+                })
 
-                }else{
-                    alert("Give me the picture!!!")
-                }
+            } else {
+                alert("Give me the picture!!!")
+            }
         })
-        $("#formDelete").click(function(event){
+        $("#formDelete").click(function (event) {
             event.preventDefault();
             $.ajax({
-                url : "deleteFile?"+$("input[name=csrf_name]").val()+"="+$("input[name=csrf_value]").val(),
-                type : "POST",
-                success : function(res) {
+                url: "deleteFile?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                type: "POST",
+                success: function (res) {
                     console.log(res);
                     $("#formUpload").removeClass("invisible");
                     $("#formDelete").addClass("invisible");
                 },
-                error : function(res){
+                error: function (res) {
                     console.log(res);
 //                    $("#errorUpload").test(res);
 //                    $("#errorUpload").removeClass("invisible");
@@ -307,7 +389,7 @@
             })
         });
 //name
-        $("#animalName").change(function(){
+        $("#animalName").change(function () {
             $("#descriptionCont").removeClass("invisible");
         });
 
@@ -345,7 +427,7 @@
 
         $('#confirmButton').click(function (event) {
             event.preventDefault();
-            $('#confirmButton').enable(false);
+
             $('#confirmButton').removeClass("btn-primary");
             $('#confirmButton').addClass("btn-default");
             var nameA = $('#animalName').val();
@@ -353,25 +435,25 @@
             var ageA = $('#age').val();
             var priceA = $('#price').val();
             var typeA = $('#selected-item-typeA p span').text();
-            var forSaleA = ($('#selected-item-forSale p span').val());
+            var forSaleA = ($('#selected-item-forSale p span').text());
             var imageA = $("#formUpload").hasClass("invisible");
 
             <%--if(typeAString == ${"cheep"}){--%>
-                <%--<c:set var="typeA" value="<%=AnimalType.CHEEP%>"/>--%>
+            <%--<c:set var="typeA" value="<%=AnimalType.CHEEP%>"/>--%>
             <%--}else if(typeAString == ${"average"}){--%>
-                <%--<c:set var="typeA" value="<%=AnimalType.AVERAGE%>"/>--%>
+            <%--<c:set var="typeA" value="<%=AnimalType.AVERAGE%>"/>--%>
             <%--}else if(typeAString == ${"expansive"}){--%>
-                <%--<c:set var="typeA" value="<%=AnimalType.EXPANSIVE%>"/>--%>
+            <%--<c:set var="typeA" value="<%=AnimalType.EXPANSIVE%>"/>--%>
             <%--}--%>
-            if(imageA){
-                if(nameA){
-                    if(descriptionA){
-                        if($.isNumeric(ageA)){
-                            if($.isNumeric(priceA)){
-                                if(typeA){
+            if (imageA) {
+                if (nameA) {
+                    if (descriptionA) {
+                        if ($.isNumeric(ageA)) {
+                            if ($.isNumeric(priceA)) {
+                                if (typeA) {
 
-
-                                    var animal={
+                                    $('#confirmButton').prop('disabled', true);
+                                    var animal = {
                                         name: nameA,
                                         description: descriptionA,
                                         age: ageA,
@@ -380,47 +462,47 @@
                                         animalType: typeA
                                     };
                                     $.ajax({
-                                        url : "addAnimal?"+$("input[name=csrf_name]").val()+"="+$("input[name=csrf_value]").val(),
-                                        contentType : "application/json",
-                                        type : "POST",
-                                        data : JSON.stringify(animal),
-                                        success : function(res){
-                                            alert(res.splice(".")[0]);
-                                            $("#container").css("backgroundImage", (res.splice(".")[1]+"."+res.splice(".")[2]));
-                                            $('#confirmButton').enable(true);
+                                        url: "addAnimal?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                                        contentType: "application/json",
+                                        type: "POST",
+                                        data: JSON.stringify(animal),
+                                        success: function (res) {
+//                                            alert(res.splice(".")[0]);
+//                                            $("#container").css("backgroundImage", (res.splice(".")[1]+"."+res.splice(".")[2]));
+                                            $('#confirmButton').prop('disabled', false);
                                             $('#confirmButton').removeClass("btn-default");
                                             $('#confirmButton').addClass("btn-primary");
-                                            $.ajax({
-                                                url: "admin?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
-                                                contentType: "application/json",
-                                                type: "GET"
-                                            });
+//                                            $.ajax({
+//                                                url: "adminR?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+//                                                contentType: "application/json",
+//                                                type: "GET"
+//                                            });
+                                            window.location.assign("/admin");
                                         },
-                                        error : function(res){
+                                        error: function (res) {
                                             alert(res);
                                         }
                                     })
-                                }else{
+                                } else {
                                     alert("Add type!!")
                                 }
-                            }else{
+                            } else {
                                 alert("Enter price properly!!")
                             }
-                        }else{
+                        } else {
                             alert("Enter age properly!!")
                         }
-                    }else{
+                    } else {
                         alert("Add description!!")
                     }
-                }else{
+                } else {
                     alert("Add name!!")
                 }
-            }else{
+            } else {
                 alert("Add photo!!")
             }
 
         });
-
 
 
         $("#showAddAnimal").click(function () {

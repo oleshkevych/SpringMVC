@@ -1,4 +1,6 @@
 <%@ page import="ua.com.bestZoo.entity.UserRole" %>
+<%@ page import="ua.com.bestZoo.entity.Weapon" %>
+<%@ page import="ua.com.bestZoo.entity.OrderType" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
          pageEncoding="ISO-8859-1" %>
 
@@ -32,10 +34,10 @@ prefix="sec" %>
 </head>
 <body>
 <c:set var="user" value="${userRoleText}"/>
-${user}
-<c:set var="HUNTER" value="<%=UserRole.HUNTER.getTexts()%>"/>
+<c:set var="NOHUNTER" value="<%=UserRole.NOTENOUGHSMART.getTexts()%>"/>
+
 <c:choose>
-<c:when test="${(user eq HUNTER)}">
+<c:when test="${(user != NOHUNTER)}">
 <div id="pageH">
     <div id="headerH">
         <div id="logo">
@@ -101,135 +103,142 @@ ${user}
 
     <div id="container">
         <div class="wrapper">
-        <!--order type-->
 
-        <div class="container" id="containerOrderType">
-            <div class="selected-item" id="selected-itemOrderType">
-                <p>You Selected Country : <span>Empty</span></p>
-            </div>
-
-            <div class="dropdown" id="orderType">
-                <span class="selLabel" id="selLabelOrderType">Select Country</span>
-                <input type="hidden" name="cd-dropdown">
-                <ul class="dropdown-list" id="dropdown-listOrderType">
-                    <li data-value="1">
-                        <span>Pakistan</span>
-                    </li>
-                    <li data-value="2">
-                        <span>Saudia</span>
-                    </li>
-                    <li data-value="3">
-                        <span>Turkey</span>
-                    </li>
-                    <li data-value="4">
-                        <span>Bangladesh</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!--date-->
-        <div class="container invisible data">
-            <div class="form-group">
-                <p>Select the date:</p>
-                <div class='input-group date'>
-                    <input type='text' class="form-control" id='datetimepicker'/>
-                    <span class="input-group-addon">
+            <!--date-->
+            <div class="container data">
+                <div class="form-group">
+                    <p>Select the date:</p>
+                    <div class='input-group date'>
+                        <input type='text' class="form-control" id='datetimepicker'/>
+                        <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
+                    </div>
+
                 </div>
-
             </div>
-        </div>
 
 
-        <!--animal-->
+
+
+            <!--animal-->
         <div class="container animal invisible">
-            <label for="animalSelect">Select the animals:</label>
+            <label for="animalSelect">Select the animal:</label>
             <select class="selectpicker anim" data-live-search="true" id="animalSelect">
-                <option data-tokens=""value=""></option>
-                <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
-                <option data-tokens="mustard">Burger, Shake and a Smile</option>
-                <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+                <option  value=""></option>
+                <c:forEach var="a" items="${animals}">
+                    <option class="animsel" value="${a.id}" data-value="${a.id}">${a.name}, age: ${a.age}</option>
+                </c:forEach>
+
             </select>
         </div>
 
+            <!--time of meeting-->
+            <div class="container invisible" id="container-time">
+                <div class="selected-item" id="selected-item-time">
+                    <p>You Selected: <span></span></p>
+                </div>
 
+                <div class="dropdown" id="time">
+                    <span class="selLabel" id="selLabel-time">Select Time!</span>
+                    <input type="hidden" name="cd-dropdown">
+                    <ul class="dropdown-list" id="dropdown-list-time">
+                        <li data-value="1">
+                            <span>1 hour</span>
+                        </li>
+                        <li data-value="2">
+                            <span>1.5 hous</span>
+                        </li>
+                        <li data-value="3">
+                            <span>2 hours</span>
+                        </li>
+                        <li data-value="4">
+                            <span>more then 2 hours</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="wrapper">
+            <c:if test="${(user != NOHUNTER)}">
         <!--weapon-->
         <div class="container invisible" id="containerWeapon">
             <div class="selected-item" id="selected-itemWeapon">
-                <p>You Selected Country : <span>Empty</span></p>
+                <p>You Selected Weapon : <span></span></p>
             </div>
 
             <div class="dropdown" id="weapon">
-                <span class="selLabel" id="selLabelWeapon">Select Country</span>
+                <span class="selLabel" id="selLabelWeapon">Select Weapon</span>
                 <input type="hidden" name="cd-dropdown">
                 <ul class="dropdown-list" id="dropdown-listWeapon">
                     <li data-value="1">
-                        <span>Pakistan</span>
+                        <span><%=Weapon.USERSWEAPON.getDisplayDescription()%></span>
                     </li>
                     <li data-value="2">
-                        <span>Saudia</span>
+                        <span><%=Weapon.KNIF%></span>
                     </li>
                     <li data-value="3">
-                        <span>Turkey</span>
+                        <span><%=Weapon.PISTOL%></span>
                     </li>
                     <li data-value="4">
-                        <span>Bangladesh</span>
+                        <span><%=Weapon.M16%></span>
+                    </li>
+                    <li data-value="5">
+                        <span><%=Weapon.BARRETT%></span>
+                    </li>
+                    <li data-value="6">
+                        <span><%=Weapon.BAZOOKA%></span>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <!--time of meeting-->
-        <div class="container invisible" id="container-time">
-            <div class="selected-item" id="selected-item-time">
-                <p>You Selected Country : <span>Empty</span></p>
-            </div>
 
-            <div class="dropdown" id="time">
-                <span class="selLabel" id="selLabel-time">Select Country</span>
-                <input type="hidden" name="cd-dropdown">
-                <ul class="dropdown-list" id="dropdown-list-time">
-                    <li data-value="1">
-                        <span>Pakistan</span>
-                    </li>
-                    <li data-value="2">
-                        <span>Saudia</span>
-                    </li>
-                    <li data-value="3">
-                        <span>Turkey</span>
-                    </li>
-                    <li data-value="4">
-                        <span>Bangladesh</span>
-                    </li>
-                </ul>
+            <!--order type-->
+
+            <div class="container invisible" id="containerOrderType">
+                <div class="selected-item" id="selected-itemOrderType">
+                    <p>You Selected Type : <span></span></p>
+                </div>
+
+                <div class="dropdown" id="orderType">
+                    <span class="selLabel" id="selLabelOrderType">Select Type</span>
+                    <input type="hidden" name="cd-dropdown">
+                    <ul class="dropdown-list" id="dropdown-listOrderType">
+                        <li data-value="1">
+                            <span><%=OrderType.MEETING%></span>
+                        </li>
+                        <li data-value="2">
+                            <span><%=OrderType.HUNTING%></span>
+                        </li>
+                        <li data-value="3">
+                            <span><%=OrderType.FEED%></span>
+                        </li>
+                        <li data-value="4">
+                            <span><%=OrderType.SUICIDE%></span>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
 
         <!--distance-->
         <div class="container invisible" id="container-distance">
             <div class="selected-item" id="selected-item-distance">
-                <p>You Selected Country : <span>Empty</span></p>
+                <p>You Selected Distance : <span></span></p>
             </div>
 
             <div class="dropdown" id="distance">
-                <span class="selLabel" id="selLabel-distance">Select Country</span>
+                <span class="selLabel" id="selLabel-distance">Select Distance</span>
                 <input type="hidden" name="cd-dropdown">
                 <ul class="dropdown-list" id="dropdown-list-distance">
                     <li data-value="1">
-                        <span>Pakistan</span>
+                        <span>less then 50m</span>
                     </li>
                     <li data-value="2">
-                        <span>Saudia</span>
+                        <span>less then 500m</span>
                     </li>
                     <li data-value="3">
-                        <span>Turkey</span>
-                    </li>
-                    <li data-value="4">
-                        <span>Bangladesh</span>
+                        <span>more then 50m</span>
                     </li>
                 </ul>
             </div>
@@ -239,37 +248,38 @@ ${user}
         <!--freedom-->
         <div class="container invisible" id="container-freedom">
             <div class="selected-item" id="selected-item-freedom">
-                <p>You Selected Country : <span>Empty</span></p>
+                <p>You Selected: <span></span></p>
             </div>
 
             <div class="dropdown" id="freedom">
-                <span class="selLabel" id="selLabel-freedom">Select Country</span>
+                <span class="selLabel" id="selLabel-freedom">Select will the animal free</span>
                 <input type="hidden" name="cd-dropdown">
                 <ul class="dropdown-list" id="dropdown-list-freedom">
                     <li data-value="1">
-                        <span>Pakistan</span>
+                        <span>True</span>
                     </li>
                     <li data-value="2">
-                        <span>Saudia</span>
-                    </li>
-                    <li data-value="3">
-                        <span>Turkey</span>
-                    </li>
-                    <li data-value="4">
-                        <span>Bangladesh</span>
+                        <span>False</span>
                     </li>
                 </ul>
             </div>
         </div>
+                </c:if>
+                <div class="container invisible" id="container-price">
+                <div class="selected-item">
+                    <p>Your price: <span></span></p>
+                </div>
 
 
         <button type="button" class="btn btn-primary container invisible" id="confirmButton">Accept</button>
-                </div>
+                    <button type="button" class="btn btn-primary container invisible" id="OKButton">OK</button>
+            </div>
+
     </div>
 
 
     <c:choose>
-    <c:when test="${(user eq HUNTER)}">
+    <c:when test="${(user != NOHUNTER)}">
     <div id="footerH">
         </c:when>
         <c:otherwise>
@@ -308,10 +318,60 @@ ${user}
     </div>
 
 </div>
+                <input type="hidden" name="csrf_name" value="${_csrf.parameterName}"/>
+                <input type="hidden" name="csrf_value" value="${_csrf.token}"/>
 
 
 <script type="text/javascript">
     $(document).ready(function () {
+var animalId;
+        $(function () {
+            // Bootstrap DateTimePicker v4
+            $('.animal').removeClass('invisible');
+            $('#datetimepicker').datetimepicker();
+        });
+        $(".animsel").focus(function(){
+            animalId = $(this).data('value');
+            console.log($(this).data('value'));
+        });
+        $(".animsel").click(function(){
+            animalId = $(this).data('value');
+            console.log($(this).data('value'));
+            console.log($(this).val());
+
+        });
+        $('.animal').change(function () {
+
+            $('#container-time').removeClass('invisible');
+        });
+
+
+        $("#selLabel-time").click(function () {
+            $('#time').toggleClass('active');
+        });
+
+        $("#dropdown-list-time li").click(function () {
+            $('#selLabel-time').text($(this).text());
+            $('#time').removeClass('active');
+            $('#selected-item-time p span').text($('#selLabel-time').text());
+            $('#containerWeapon').removeClass('invisible');
+            <c:if test="${(user != NOHUNTER)}">
+            $('#confirmButton').removeClass('invisible');
+            </c:if>
+        });
+
+        $("#selLabelWeapon").click(function () {
+            $('#weapon').toggleClass('active');
+        });
+
+        $("#dropdown-listWeapon li").click(function () {
+            $('#selLabelWeapon').text($(this).text());
+            $('#weapon').removeClass('active');
+            $('#selected-itemWeapon p span').text($('#selLabelWeapon').text());
+            $('#containerOrderType').removeClass('invisible');
+        });
+
+
 
         $("#selLabelOrderType").click(function () {
             $('#orderType').toggleClass('active');
@@ -322,35 +382,10 @@ ${user}
             $('#orderType').removeClass('active');
             $('#selected-itemOrderType p span').text($('#selLabelOrderType').text());
 
-            $('.data').removeClass('invisible');
-            $('.animal').removeClass('invisible');
-        });
-
-        $('.animal').change(function () {
-            console.log($("#animalSelect").val())
-            $('#containerWeapon').removeClass('invisible');
-        })
-        $("#selLabelWeapon").click(function () {
-            $('#weapon').toggleClass('active');
-        });
-
-        $("#dropdown-listWeapon li").click(function () {
-            $('#selLabelWeapon').text($(this).text());
-            $('#weapon').removeClass('active');
-            $('#selected-itemWeapon p span').text($('#selLabelWeapon').text());
-            $('#container-time').removeClass('invisible');
-        });
-
-        $("#selLabel-time").click(function () {
-            $('#time').toggleClass('active');
-        });
-
-        $("#dropdown-list-time li").click(function () {
-            $('#selLabel-time').text($(this).text());
-            $('#time').removeClass('active');
-            $('#selected-item-time p span').text($('#selLabel-time').text());
             $('#container-distance').removeClass('invisible');
         });
+
+
 
         $("#selLabel-distance").click(function () {
             $('#distance').toggleClass('active');
@@ -371,15 +406,65 @@ ${user}
             $('#selLabel-freedom').text($(this).text());
             $('#freedom').removeClass('active');
             $('#selected-item-freedom p span').text($('#selLabel-freedom').text());
-            $('.btn').removeClass('invisible');
+            $('#confirmButton').removeClass('invisible');
         });
+
+        $('#confirmButton').click(function(event){
+            event.preventDefault();
+            var dateS = $('#datetimepicker').val();
+            var animalS = animalId;
+            var timeS = $('#selLabel-time').text();
+            var weaponS = $('#selLabelWeapon').text();
+            var orderTypeS = $('#selLabelOrderType').text();
+            var distanceS = $('#selLabel-distance').text();
+            var isFreeS = $('#selLabel-freedom').text();
+
+            var data = {
+                date : dateS,
+                anim : animalS,
+                time : timeS,
+                weapon : weaponS,
+                orderType: orderTypeS,
+                distance : distanceS,
+                isFree : isFreeS
+            };
+            $.ajax({
+                url: "newOrder?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                data: JSON.stringify(data),
+                success: function (res) {
+
+                    $("#container-price").removeClass("invisible");
+                    $("#container-price div p span").text(res);
+                    $("#confirmButton").addClass("invisible");
+                    $("#OKButton").removeClass("invisible");
+                    $("#OKButton").click(function (event) {
+                        event.preventDefault();
+                                $.ajax({
+                                    url: "newOrderConfirm?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                                    contentType: "application/json",
+                                    type: "POST",
+                                    success: function () {
+                                        window.location.assign("/addOrder");
+
+                                    },
+                                    error: function (res) {
+                                        alert(res);
+                                    }
+                                })
+
+                    })
+                },
+                error: function (res) {
+                    alert(res);
+                }
+            })
+        });
+
 //        $('#datetimepicker').data("DateTimePicker").FUNCTION()
 
-        $(function () {
-            // Bootstrap DateTimePicker v4
-            $('#datetimepicker').datetimepicker(
-            );
-        });
+
     });
 </script>
 
