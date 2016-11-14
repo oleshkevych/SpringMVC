@@ -1,5 +1,7 @@
 package ua.com.bestZoo.entity;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -13,11 +15,14 @@ public class ZooOrder {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
     private String name;
+    @Type(type="text")
     private String description;
     private int age;
     private int price;
     private LocalDateTime date;
     private boolean completed;
+    private boolean thisOrderDeleted;
+    private boolean newOrder;
     @Enumerated
     private AnimalType animalType;
     @ManyToOne
@@ -34,6 +39,24 @@ public class ZooOrder {
         this.date = date;
         this.animalType = animalType;
         this.completed = false;
+        this.thisOrderDeleted = false;
+        this.newOrder = true;
+    }
+
+    public boolean isNewOrder() {
+        return newOrder;
+    }
+
+    public void setNewOrder(boolean newOrder) {
+        this.newOrder = newOrder;
+    }
+
+    public boolean isThisOrderDeleted() {
+        return thisOrderDeleted;
+    }
+
+    public void setThisOrderDeleted(boolean delete) {
+        this.thisOrderDeleted = delete;
     }
 
     public int getId() {

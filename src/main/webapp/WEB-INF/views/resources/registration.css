@@ -1,8 +1,0 @@
-legend{
-    text-align: center;
-}
-@media screen and (max-width: 768px) {
-    legend{
-        text-align: left;
-    }
-}

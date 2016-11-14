@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
+import org.springframework.web.bind.annotation.ResponseBody;
 import ua.com.bestZoo.beans.ActiveUser;
 import ua.com.bestZoo.entity.Role;
 import ua.com.bestZoo.entity.User;
@@ -31,90 +32,51 @@ public class HomeController {
 
     @Autowired
     private AnimalService animalService;
-	
-//	@RequestMapping(value="/", method=RequestMethod.GET)
-//	public String commodity(Model model){
-//		List<Commodity> commodities = commodityService.findAll();
-//		model.addAttribute("commodities", commodities);
-////		System.out.println(commodityService.findAll());
-//		return "home";
-//	}
 
-//	@RequestMapping(value="/", method=RequestMethod.GET)
-//	public String home() {
-//		return "home";
-//	}
-	
-//	@RequestMapping(value="/buy/{id}", method=RequestMethod.GET)
-//	public String home(Principal principal, @PathVariable String id){
-//		User user = userService.fetchUser(Integer.parseInt(principal.getName()));
-//		Commodity commodity = commodityService.findOneUser(Integer.parseInt(id));
-//		System.out.println(user.getUsername());
-//		commodity.setUser(user);
-//		commodityService.save(commodity);
-////		user.getCommodities().add(commodity);
-////		System.out.println(user.getCommodities().size()+"");
-////		userService.save(user);
-//		return "redirect:/";
-//	}
 
     @RequestMapping(value="/", method=RequestMethod.GET)
     public String h() {
 
         return "redirect:/h";
     }
-	@RequestMapping(value={"/logout"}, method=RequestMethod.POST)
-	public String logout(){
+    @RequestMapping(value={"/logout"}, method=RequestMethod.POST)
+    public String logout(){
+        return "redirect:/h";
+    }
+	@RequestMapping(value={"/logoutS"}, method=RequestMethod.POST)
+	public @ResponseBody String logoutS(){
+        System.out.println( "11"+activeUser.getRole());
         if(activeUser.getRole() != Role.ROLE_ADMIN) {
             userService.save(activeUser.getUser());
         }
-		return "redirect:/h";
+        activeUser = new ActiveUser();
+		return "saved";
 	}
 	@RequestMapping(value="/h", method=RequestMethod.GET)
-	public String home(Principal principal, Model model) {
-
+	public String home(Model model) {
 		try {
-//            String userLoginNumber = principal.getName();
-//            if(!userLoginNumber.equals("admin")) {
-//                User user = userService.fetchUser(Integer.parseInt(userLoginNumber));
-//
-//                model.addAttribute("userRoleText", user.getUserRole().getTexts());
-//            }else{
-//                model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
-//            }
+            try {
+                User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            model.addAttribute("userRoleText", activeUser.getUserRole().getTexts());
-
+                model.addAttribute("userRoleText", user.getUserRole().getTexts());
+                activeUser.setUser(user);
+                activeUser.setUserRole(user.getUserRole());
+            }catch (ClassCastException cce){
+                model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
+            }
         }catch (NullPointerException e){
             model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
 		}
 		return "home";
 	}
     @RequestMapping(value="/homeP", method=RequestMethod.POST)
-    public String homeAfterLogIn(Principal principal, Model model) {
-
-//        try {
-//            String userLoginNumber = principal.getName();
-//            if(!userLoginNumber.equals("admin")) {
-//                User user = userService.fetchUser(Integer.parseInt(userLoginNumber));
-//
-//                model.addAttribute("userRoleText", user.getUserRole().getTexts());
-//            }else{
-//                model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
-//            }
-//        }catch (NullPointerException e){
-//            model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
-//        }
+    public String homeAfterLogIn() {
         return "redirect:/h";
     }
 
 	@RequestMapping(value="/forSale", method=RequestMethod.GET)
 	public String forSale(Model model) {
-
         try {
-//            User user = userService.fetchUser(Integer.parseInt(principal.getName()));
-//
-//            model.addAttribute("userRoleText", user.getUserRole().getTexts());
             model.addAttribute("userRoleText", activeUser.getUserRole().getTexts());
 
         }catch (NullPointerException e){
@@ -139,11 +101,13 @@ public class HomeController {
 	}
 	@RequestMapping(value={"/loginPage", "/login"}, method=RequestMethod.POST)
     public String loginPage(){
+        activeUser = new ActiveUser();
         activeUser.setUserRole(UserRole.NOTENOUGHSMART);
         return "login";
     }
     @RequestMapping(value={"/login"}, method=RequestMethod.GET)
     public String loginR(){
+        activeUser = new ActiveUser();
         activeUser.setUserRole(UserRole.NOTENOUGHSMART);
         return "login";
     }
@@ -169,18 +133,24 @@ public class HomeController {
         activeUser.setUserRole(UserRole.HUNTER);
         return "loginH";
     }
-    @RequestMapping(value={"/loggedIn"}, method=RequestMethod.POST)
-    public String loggedIn(Principal principal) {
+    @RequestMapping(value={"/loggedIn", "/loginprocesing"}, method=RequestMethod.POST)
+    public String loggedIn() {
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            System.out.println("1: "+user.getUserRole());
+
             if ((user.getUserRole() != UserRole.HUNTER) && (activeUser.getUserRole() == UserRole.HUNTER)) {
                 user.setUserRole(UserRole.HUNTER);
             }
             activeUser.setUser(user);
             activeUser.setUserRole(user.getUserRole());
+            System.out.println("2: "+user.getUserRole());
+            activeUser.setRole(Role.ROLE_USER);
+            System.out.println("!myOrders"+activeUser.getUser().userName());
         }catch (ClassCastException e){
             activeUser.setRole(Role.ROLE_ADMIN);
         }
+        System.out.println(activeUser.getUserRole());
         return "home";
     }
 

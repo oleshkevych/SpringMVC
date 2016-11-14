@@ -1,6 +1,10 @@
 package ua.com.bestZoo.entity;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vov4ik on 11/2/2016.
@@ -11,6 +15,7 @@ public class Animal {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
     private String name;
+    @Type(type="text")
     private String description;
     private int age;
     private int price;
@@ -24,6 +29,12 @@ public class Animal {
     @ManyToOne
     private Zoo zoo;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "animal_userorder",
+            joinColumns = @JoinColumn(name = "animal_id"),
+            inverseJoinColumns = @JoinColumn(name = "userorder_id"))
+    private List<UserOrder> userOrders = new ArrayList<>();
+
     public Animal() {
     }
 
@@ -36,6 +47,14 @@ public class Animal {
         this.forSale = forSale;
         this.imagePath = imagePath;
         alive = true;
+    }
+
+    public List<UserOrder> getUserOrders() {
+        return userOrders;
+    }
+
+    public void setUserOrders(List<UserOrder> userOrders) {
+        this.userOrders = userOrders;
     }
 
     public Zoo getZoo() {

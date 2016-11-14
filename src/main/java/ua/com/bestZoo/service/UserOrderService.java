@@ -10,7 +10,10 @@ import java.util.List;
 public interface UserOrderService {
 
     void save(UserOrder userOrder);
-    void delete(UserOrder userOrder);
+    void delete(int id);
+    void deleteUSERORDER(UserOrder userOrder);
+
+    List<UserOrder> findAllUO();
     List<UserOrder> findAll();
     List<UserOrder> findFeeds();
     List<UserOrder> findMeetings();
@@ -21,6 +24,7 @@ public interface UserOrderService {
     List<UserOrder> findOurWeaponUsed();
     List<UserOrder> findCompleted();
     List<UserOrder> findUncompleted();
+//    UserOrder findfetchUserOrders(int id);
 
 
 

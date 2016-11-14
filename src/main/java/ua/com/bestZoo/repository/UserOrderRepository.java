@@ -10,4 +10,6 @@ import ua.com.bestZoo.entity.UserOrder;
  */
 public interface UserOrderRepository extends JpaRepository<UserOrder, Integer> {
 
+//    @Query(value = "select o from UserOrder o left join fetch o.animals a where o.id =:id")
+//    UserOrder findfetchUserOrders(@Param("id") int id);
 }

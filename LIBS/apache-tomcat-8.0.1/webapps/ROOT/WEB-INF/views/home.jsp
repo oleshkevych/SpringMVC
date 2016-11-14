@@ -70,6 +70,18 @@ ${user}
 <c:choose>
 <c:when test="${(user eq HUNTER)}">
 <div id="pageH">
+    <script type="text/javascript">
+        $("#registr").click(function () {
+            $.ajax({
+                url: "logoutS?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                success: function (res) {
+                    console.log(res);
+                }
+            })
+    });
+    </script>
     <div id="headerH">
         <div id="logo">
             <a href="h"><img src="resources/images/logoH.jpg" alt="The Analog Specialists"/></a>
@@ -106,11 +118,13 @@ ${user}
                                 </sec:authorize>
 
                                 <sec:authorize access="isAuthenticated()">
+                                <sec:authorize access="hasRole('ROLE_USER')" >
                                     <li role="presentation" class="footerList"><a href="addOrder">Make new order</a>
                                     </li>
                                     <li role="presentation" class="footerList"><a href="myOrders">My orders</a></li>
+                                </sec:authorize>
                                     <li role="presentation" class="footerList">
-                                        <sf:form action="logout" method="post">
+                                        <sf:form action="logout" method="post" id="logoutForm">
                                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                             <button class="formRegistButton footerList">Log Out</button>
                                         </sf:form>
@@ -136,19 +150,19 @@ ${user}
                 </div>
 
                 <div id="container">
-                    <div>path=${pageContext.request.contextPath}
-                        <br>
-                        path1 = <%= request.getContextPath()%>
-                        <br>
-                        <img src="image/1.jpg" />
-                        <br>
-                        path2=
-                        <br>
-                        <img src="<%=System.getProperty("catalina.home")%>/Resources/1.jpg" />
+                    <%--<div>path=${pageContext.request.contextPath}--%>
+                        <%--<br>--%>
+                        <%--path1 = <%= request.getContextPath()%>--%>
+                        <%--<br>--%>
+                        <%--<img src="image/1.jpg" />--%>
+                        <%--<br>--%>
+                        <%--path2=--%>
+                        <%--<br>--%>
+                        <%--<img src="<%=System.getProperty("catalina.home")%>/Resources/1.jpg" />--%>
 
-                        <br>
+                        <%--<br>--%>
 
-                    </div>
+                    <%--</div>--%>
                     <div id="mainImage">
                         <a href="textFormForAllQuestions"><img style="width: 100%" src="resources/images/baobao.jpg"
                                                                alt="Articles"></a>
@@ -216,5 +230,10 @@ ${user}
                 </div>
 
             </div>
+            <input type="hidden" name="csrf_name" value="${_csrf.parameterName}"/>
+            <input type="hidden" name="csrf_value" value="${_csrf.token}"/>
+
+
+
 </body>
 </html>

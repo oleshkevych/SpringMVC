@@ -1,5 +1,6 @@
 package ua.com.bestZoo.entity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +13,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ua.com.bestZoo.service.ZooService;
 
 @Entity
+@org.hibernate.annotations.Entity(
+		dynamicUpdate = true
+)
 public class User implements UserDetails {
 
 	@Id
@@ -28,6 +32,7 @@ public class User implements UserDetails {
     private boolean isHunter;
     private boolean isMeetinger;
 	private int quantityFeeds;
+	private boolean deletedUser;
 
 	@Enumerated
 	private Role role;
@@ -57,13 +62,23 @@ public class User implements UserDetails {
         isMeetinger = false;
         quantityFeeds = 0;
         userRole = UserRole.NOTENOUGHSMART;
-        pathImage = "";
+        pathImage = "image"+ File.separator+"0default.jpg";
         role = Role.ROLE_USER;
 		userOrders = new ArrayList<>();
+		deletedUser = false;
+
     }
 
 	public User() {
 		super();
+	}
+
+	public boolean isDeletedUser() {
+		return deletedUser;
+	}
+
+	public void setDeletedUser(boolean deletedUser) {
+		this.deletedUser = deletedUser;
 	}
 
 	public Zoo getZoo() {
@@ -245,9 +260,4 @@ public class User implements UserDetails {
 		return true;
 	}
 
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }

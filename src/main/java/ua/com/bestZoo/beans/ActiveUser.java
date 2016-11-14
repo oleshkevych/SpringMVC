@@ -1,11 +1,9 @@
 package ua.com.bestZoo.beans;
 
 import org.springframework.stereotype.Component;
-import ua.com.bestZoo.entity.Role;
-import ua.com.bestZoo.entity.User;
-import ua.com.bestZoo.entity.UserOrder;
-import ua.com.bestZoo.entity.UserRole;
+import ua.com.bestZoo.entity.*;
 
+import javax.persistence.PreRemove;
 import java.util.List;
 
 /**
@@ -13,6 +11,12 @@ import java.util.List;
  */
 @Component
 public class ActiveUser {
+
+    private Animal animal;
+
+    private ZooOrder zooOrder;
+
+    private UserOrder uo;
 
     private User user;
 
@@ -27,6 +31,33 @@ public class ActiveUser {
     private Role role;
 
     public ActiveUser() {
+        role = Role.ROLE_USER;
+        userRole = UserRole.NOTENOUGHSMART;
+        user = new User();
+    }
+
+    public UserOrder getUo() {
+        return uo;
+    }
+
+    public Animal getAnimal() {
+        return animal;
+    }
+
+    public ZooOrder getZooOrder() {
+        return zooOrder;
+    }
+
+    public void setZooOrder(ZooOrder zooOrder) {
+        this.zooOrder = zooOrder;
+    }
+
+    public void setAnimal(Animal animal) {
+        this.animal = animal;
+    }
+
+    public void setUo(UserOrder uo) {
+        this.uo = uo;
     }
 
     public Role getRole() {
@@ -87,4 +118,5 @@ public class ActiveUser {
                 ", meetings=" + meetings +
                 '}';
     }
+
 }

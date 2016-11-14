@@ -22,7 +22,10 @@
     <link href="resources/bootstrap-3.3.7/js/bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.css"
           rel="stylesheet">
 
+
+    <script src="resources/bootstrap-3.3.7/js/moment.min.js"></script>
     <script src="resources/bootstrap-3.3.7/js/jquery.min.js"></script>
+    <script src="resources/bootstrap-3.3.7/js/bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js"></script>
     <script src="resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script src="resources/bootstrap-3.3.7/js/bootstrap-select-master/dist/js/bootstrap-select.min.js"></script>
 
@@ -66,8 +69,10 @@
             </div>
         </div>
     </div>
-
-
+    <div style="float: right;">
+    <label>Now you have ${cages} cages free.</label>
+    <label style="margin-top: 20px; display: inherit;">Now you have ${bank} $ free.</label>
+</div>
     <div id="container">
         <button class="btn bg-primary" id="showAddAnimal">Add Animal</button>
         <div id="addAnimal" class="invisible list-group">
@@ -190,36 +195,73 @@
                 <button type="button" class="btn btn-primary container invisible" id="confirmButton">Accept</button>
             </div>
 
+            <div class="wrapper">
+
+                <ul id="animalsList" style="float: left;">
+                    <c:forEach var="a" items="${animals}">
+                        <li class="${a.id}" style="cursor: pointer; ">
+                            <img src="${a.imagePath}" alt="image" style="width: 150px; height: 200px">
+                            <label> Name: ${a.name}, age: ${a.age}, price: ${a.price}</label>
+                            <button id="deleteAnimal" class="btn btn-primary">delete</button>
+                        </li>
+                        <br>
+                    </c:forEach>
+                </ul>
+            </div>
 
         </div>
         <button class="btn bg-primary" id="showZooOrders">Zoo Orders</button>
         <div id="zooOrders" class="invisible list-group">
+            <br>
+            <button class="btn bg-primary" id="createZooOrders">Create The Order</button>
+            <br>
+            <div id="zooOrdersCont" class="list-group">
 
-            <div id="zooOrdersCont" class="invisible list-group">
-
-                <c:forEach var="zo" items="${zooOrders }">
-                    <div class="descriptionPanel">
-                        <div class="dataO">
-                            <p> ${zo.name}</p>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.description}</p>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.price}</p>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.age}</p>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.date}</p>
-                        </div>
+                <c:forEach var="zo" items="${zooOrders}">
+                    <c:choose>
+                        <c:when test="${zo.newOrder}">
+                            <div class="descriptionPanel zooOrder" style="color: tomato" id="${zo.id}">
+                        </c:when>
+                        <c:otherwise>
+                            <div class="descriptionPanel zooOrder" id="${zo.id}">
+                        </c:otherwise>
+                    </c:choose>
 
                         <div class="dataO">
-                            <p> ${zo.animalType}</p>
+                            <p> Name: ${zo.name};</p>
                         </div>
                         <div class="dataO">
-                            <p> ${zo.completed}</p>
+                            <p> Description: ${zo.description};</p>
+                        </div>
+                        <div class="dataO">
+                            <p> Price: ${zo.price};</p>
+                        </div>
+                        <div class="dataO">
+                            <p> Age: ${zo.age};</p>
+                        </div>
+                        <div class="dataO">
+                            <p> Date: ${zo.date};</p>
+                        </div>
+
+                        <div class="dataO">
+                            <p> Type: ${zo.animalType};</p>
+                        </div>
+                        <div class="dataO">
+                            <p> Is complete: ${zo.completed};</p>
+                        </div>
+                        <div>
+                            <button class="completeZo btn btn-primary" id="${zo.id}">
+                                <c:choose>
+                                <c:when test="${zo.completed}">
+                                Mark Uncompleted
+                                            </c:when>
+                                            <c:otherwise>
+                                                Mark Completed
+                                                        </c:otherwise>
+                                                        </c:choose></button>
+                        </div>
+                        <div>
+                            <button class="deleteZo btn btn-primary" id="${zo.id}">Delete Order</button>
                         </div>
                     </div>
                     <br>
@@ -230,106 +272,230 @@
         <button class="btn bg-primary" id="showUsers">Users</button>
         <div id="users" class="invisible list-group">
 
-                <c:forEach var="zo" items="${users }">
-                    <div class="descriptionPanel">
-                        <div class="dataO">
-                            <img src="${zo.pathImage}" alt="Photo"/>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.username}</p>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.phoneNumber}</p>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.email}</p>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.bonuses}</p>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.quantityActions}</p>
-                        </div>
+            <c:forEach var="zo" items="${users }">
 
-                        <div class="dataO">
-                            <p> ${zo.quantityFeeds}</p>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.userRole}</p>
-                        </div>
+                <c:choose>
+                <c:when test="${zo.suicide}">
+                <div class="descriptionPanel" style="color: peru" >
+                    </c:when>
+                    <c:otherwise>
+                    <div class="descriptionPanel">
+                        </c:otherwise>
+                        </c:choose>
+                    <div class="dataO">
+                        <img src="${zo.pathImage}" alt="Photo"/>
                     </div>
-                    <br>
-                </c:forEach>
+                    <div class="dataO">
+                        <p>Name: ${zo.userName()};</p>
+                    </div>
+                    <div class="dataO">
+                        <p>Phone: ${zo.phoneNumber};</p>
+                    </div>
+                    <div class="dataO">
+                        <p>Email: ${zo.email};</p>
+                    </div>
+                    <div class="dataO">
+                        <p>Bonuses: ${zo.bonuses};</p>
+                    </div>
+                    <div class="dataO">
+                        <p>Actions: ${zo.quantityActions};</p>
+                    </div>
+
+                    <div class="dataO">
+                        <p>Feeds: ${zo.quantityFeeds};</p>
+                    </div>
+                    <div class="dataO">
+                        <p>Role: ${zo.userRole};</p>
+                    </div>
+                    <div class="dataO">
+                        <button class="deleteUser btn btn-primary" id="${zo.id}">Delete</button>
+                    </div>
+                    <div class="dataO">
+                        <button class="btn btn-primary changePasswordUser"  id="${zo.id}">Change Password</button>
+                    </div>
+                    <div class="dataO invisible changeField"  id="${zo.id}">
+                        <label for="${zo.id}">Enter new Password</label>
+                        <input type="text" class="form-control changePasswordInput"
+                               aria-describedby="sizing-addon1" id="${zo.id}"/>
+                        <button class="changePasswordUserConf btn btn-primary" id="${zo.id}">Change Password</button>
+                    </div>
+
+                </div>
+                <br>
+            </c:forEach>
         </div>
 
         <button class="btn bg-primary" id="showOrdersUsers">Users orders</button>
         <div id="ordersUsers" class="invisible list-group">
             <c:forEach var="zo" items="${orderUsers }">
-                <div class="descriptionPanel">
+
+                <c:choose>
+                <c:when test="${zo.newOrder}">
+                <div class="descriptionPanel"  style="color: tomato">
+                    </c:when>
+                    <c:otherwise>
+                        <div class="descriptionPanel">
+                        </c:otherwise>
+                        </c:choose>
                     <div class="dataO">
-                        <p> ${zo.orderType}</p>
+                        <p>Name user: ${zo.user.userName()}</p>
                     </div>
                     <div class="dataO">
-                        <p> ${zo.date}</p>
+                        <p>Type: ${zo.orderType};</p>
                     </div>
                     <div class="dataO">
-                        <p> ${zo.price}</p>
+                        <p>Date: ${zo.date};</p>
                     </div>
                     <div class="dataO">
-                        <p> ${zo.weapon}</p>
+                        <p>Price: ${zo.price};</p>
                     </div>
                     <div class="dataO">
-                        <p> ${zo.animals}</p>
+                        <p>Weapon: ${zo.weapon};</p>
+                    </div>
+                    <div class="dataO">
+                        <p>Animals: ${zo.animals};</p>
                     </div>
 
                     <div class="dataO">
-                        <p> ${zo.timeOfMeeting}</p>
+                        <p>Duration: ${zo.timeOfMeeting};</p>
                     </div>
                     <div class="dataO">
-                        <p> ${zo.distance}</p>
+                        <p>Distance: ${zo.distance};</p>
                     </div>
                 </div>
                 <br>
             </c:forEach>
         </div>
 
+
+        <div id="createZooOrderCont" class="invisible list-group">
+            <div class="wrapper">
+                <!--Animal name-->
+
+                <div class="container data " id="animalNameContO">
+                    <div class="form-group">
+                        <p>Enter animal's name:</p>
+                        <div>
+                            <input type="text" class="form-control inputAnim" placeholder="Animal's name"
+                                   aria-describedby="sizing-addon1" id="animalNameO"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!--description-->
+                <div class="container data" id="descriptionContO">
+                    <div class="form-group">
+                        <p>Enter something about the animal:</p>
+                        <div>
+                            <textarea rows="5" class="form-control" placeholder="Animal's information"
+                                      aria-describedby="sizing-addon1" id="descriptionO"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!--age-->
+                <div class="container  data" id="ageContO">
+                    <div class="form-group">
+                        <p>Enter animal' age:</p>
+                        <div class='input-group date'>
+                            <input type="text" class="form-control inputAnim" placeholder="Animal's age"
+                                   aria-describedby="sizing-addon1" id="ageO"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <!--price-->
+                <div class="container data" id="priceContO">
+                    <div class="form-group">
+                        <p>Enter animal' price:</p>
+                        <div>
+                            <input type="text" class="form-control inputAnim" placeholder="Animal's age"
+                                   aria-describedby="sizing-addon1" id="priceO"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!--animal type-->
+                <div class="container" id="container-typeAO">
+                    <div class="selected-item" id="selected-item-typeAO">
+                        <p>You Selected Type : <span></span></p>
+                    </div>
+
+                    <div class="dropdown" id="typeAO">
+                        <span class="selLabel" id="selLabel-typeAO">Select Animal's Type:</span>
+                        <input type="hidden" name="cd-dropdown">
+                        <ul class="dropdown-list" id="dropdown-list-typeAO">
+                            <li data-value="1">
+                                <span>${cheep}</span>
+                            </li>
+                            <li data-value="2">
+                                <span>${average}</span>
+                            </li>
+                            <li data-value="3">
+                                <span>${expansive}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!--date-->
+                <div class="container data">
+                    <div class="form-group">
+                        <p>Select the date:</p>
+                        <div class='input-group date'>
+                            <input type='text' class="form-control" id='datetimepicker'/>
+                            <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="wrapper">
+                <button type="button" class="btn btn-primary container " id="confirmButtonO">Accept</button>
+            </div>
+        </div>
     </div>
 
+<div id="footer">
 
-    <div id="footer">
+    <div id="partners">
+        <div> Our partners:</div>
+        <ul class="nav nav-pills">
+            <li role="presentation" class="imgList"><a href="forSale"><img class="imgListPartners"
+                                                                           src="resources/images/cocacola.jpg"
+                                                                           alt="coca cola"></a></li>
+            <li role="presentation" class="imgList"><a href="forSale"><img class="imgListPartners"
+                                                                           src="resources/images/timeToEat.jpg"
+                                                                           alt="time to eat"></a>
+            </li>
+            <li role="presentation" class="imgList"><a href="forSale"><img class="imgListPartners"
+                                                                           src="resources/images/weaponM.jpg"
+                                                                           alt="sponsor"></a></li>
+        </ul>
 
-        <div id="partners">
-            <div> Our partners:</div>
-            <ul class="nav nav-pills">
-                <li role="presentation" class="imgList"><a href="forSale"><img class="imgListPartners"
-                                                                               src="resources/images/cocacola.jpg"
-                                                                               alt="coca cola"></a></li>
-                <li role="presentation" class="imgList"><a href="forSale"><img class="imgListPartners"
-                                                                               src="resources/images/timeToEat.jpg"
-                                                                               alt="time to eat"></a>
-                </li>
-                <li role="presentation" class="imgList"><a href="forSale"><img class="imgListPartners"
-                                                                               src="resources/images/weaponM.jpg"
-                                                                               alt="sponsor"></a></li>
-            </ul>
-
-        </div>
-        <div>
-            <ul class="nav nav-pills">
-                <li role="presentation" class="footerList"><a href="textFormForAllQuestions"><p>Contact
-                    us</p></a></li>
-                <li role="presentation" class="footerList"><a href="textFormForAllQuestions"><p>
-                    Careers</p></a></li>
-                <li role="presentation" class="footerList"><a href="textFormForAllQuestions"><p>Private
-                    police</p></a>
-                </li>
-            </ul>
-        </div>
     </div>
+    <div>
+        <ul class="nav nav-pills">
+            <li role="presentation" class="footerList"><a href="textFormForAllQuestions"><p>Contact
+                us</p></a></li>
+            <li role="presentation" class="footerList"><a href="textFormForAllQuestions"><p>
+                Careers</p></a></li>
+            <li role="presentation" class="footerList"><a href="textFormForAllQuestions"><p>Private
+                police</p></a>
+            </li>
+        </ul>
+    </div>
+</div>
+        </div>
 </div>
 
 <input type="hidden" name="csrf_name" value="${_csrf.parameterName}"/>
 <input type="hidden" name="csrf_value" value="${_csrf.token}"/>
+
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -368,7 +534,8 @@
             } else {
                 alert("Give me the picture!!!")
             }
-        })
+        });
+
         $("#formDelete").click(function (event) {
             event.preventDefault();
             $.ajax({
@@ -397,6 +564,7 @@
         $("#description").change(function () {
             $("#ageCont").removeClass("invisible");
         });
+
         $("#age").change(function () {
             $("#priceCont").removeClass("invisible");
         });
@@ -538,6 +706,17 @@
                 $("#showUsers").removeClass("invisible");
                 $("#showOrdersUsers").removeClass("invisible");
             }
+            $.ajax({
+                url: "changeNewZO?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                success: function (res) {
+                    console.log(res);
+                },
+                error: function (res) {
+                    alert("Error:" + res);
+                }
+            })
         });
         $("#showUsers").click(function () {
             if ($("#users").hasClass("invisible")) {
@@ -572,6 +751,210 @@
                 $("#showUsers").removeClass("invisible");
                 $("#showAddAnimal").removeClass("invisible");
             }
+            $.ajax({
+                url: "changeNewUO?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                success: function (res) {
+                    console.log(res);
+                },
+                error: function (res) {
+                    alert("Error:" + res);
+                }
+            })
+        });
+
+        $("#animalsList li").click(function (event) {
+            event.preventDefault();
+            var animalId = $(this).attr('class');
+            console.log(animalId);
+            $.ajax({
+                url: "addAnimalToChange?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                data: animalId,
+                success: function (res) {
+                    window.location.assign("/changeAnimal");
+                },
+                error: function (res) {
+                    alert("Error:" + res);
+                }
+            })
+        });
+        $("#deleteAnimal").click(function (event) {
+            event.preventDefault();
+            var id = $(this).parent().attr('class');
+            $.ajax({
+                url: "deleteAnimal?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                data: id,
+                success: function (res) {
+                    window.location.assign("/admin");
+                },
+                error: function (res) {
+                    alert("Error:" + res);
+                }
+            })
+        });
+        $("#createZooOrders").click(function () {
+            $("#zooOrders").addClass("invisible");
+            $("#createZooOrderCont").removeClass("invisible");
+        });
+
+        $("#selLabel-typeAO").click(function () {
+            $('#typeAO').toggleClass('active');
+        });
+        $("#dropdown-list-typeAO li").click(function () {
+            $('#selLabel-typeAO').text($(this).text());
+            $('#typeAO').removeClass('active');
+            $('#selected-item-typeAO p span').text($('#selLabel-typeAO').text());
+        });
+
+        $(function () {
+            $('#datetimepicker').datetimepicker();
+        });
+
+        $("#confirmButtonO").click(function () {
+            $('#confirmButtonO').removeClass("btn-primary");
+            $('#confirmButtonO').addClass("btn-default");
+            var nameAO = $('#animalNameO').val();
+            var descriptionAO = $('#descriptionO').val();
+            var ageAO = $('#ageO').val();
+            var priceAO = $('#priceO').val();
+            var typeAO = $('#selected-item-typeAO p span').text();
+            var dateAO = $('#datetimepicker').val();
+            $('#confirmButtonO').prop('disabled', true);
+            var zOrder = {
+                name: nameAO,
+                description: descriptionAO,
+                age: ageAO,
+                price: priceAO,
+                date: dateAO,
+                animalType: typeAO
+            };
+            $.ajax({
+                url: "addZooOrder?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                data: JSON.stringify(zOrder),
+                success: function (res) {
+                    $('#confirmButtonO').prop('disabled', false);
+                    $('#confirmButtonO').removeClass("btn-default");
+                    $('#confirmButtonO').addClass("btn-primary");
+                    window.location.assign("/admin");
+                },
+                error: function (res) {
+                    alert(res);
+                }
+            })
+        });
+
+        $(".deleteZo").click(function(event){
+            event.preventDefault();
+            var id = $(this).attr("id");
+            $.ajax({
+                url: "deleteZooOrder?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                data: id,
+                success: function (res) {
+                    window.location.assign("/admin");
+                },
+                error: function (res) {
+                    alert("Error:" + res);
+                }
+            })
+        });
+
+        $(".completeZo").click(function(event){
+            event.preventDefault();
+            var id = $(this).attr("id");
+            $.ajax({
+                url: "completeZooOrder?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                data: id,
+                success: function (res) {
+                    window.location.assign("/admin");
+                },
+                error: function (res) {
+                    alert("Error:" + res);
+                }
+            })
+        });
+        $(".deleteUser").click(function(event){
+            event.preventDefault();
+            var id = $(this).attr("id");
+            $.ajax({
+                url: "deleteUserByAdmin?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                data: id,
+                success: function (res) {
+                    window.location.assign("/admin");
+                },
+                error: function (res) {
+                    alert("Error:" + res);
+                }
+            })
+        });
+        $(".zooOrder .dataO").click(function (event) {
+            event.preventDefault();
+            var id = $(this).parent().attr("id");
+            console.log(id);
+            $.ajax({
+                url: "addZooOrderToChange?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                data: id,
+                success: function (res) {
+                    window.location.assign("/changeAnimal");
+                },
+                error: function (res) {
+                    alert("Error:" + res);
+                }
+            })
+        });
+        $(".changePasswordUser").click(function (event) {
+            event.preventDefault();
+            var id = $(this).attr("id");
+            $("#"+id+".deleteUser").addClass("invisible");
+            $("#"+id+".changePasswordUser").addClass("invisible");
+            $("#"+id+".changeField").removeClass("invisible");
+            $("#"+id+".changePasswordUserConf").click(function(event){
+                event.preventDefault();
+                if($("#"+id+".changePasswordInput").val()!=""){
+                    var np = $("#"+id+".changePasswordInput").val();
+                    var dataPassword = {
+                        id: id,
+                        newP: np
+                    };
+                    $.ajax({
+                        url: "changeUserPassword?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                        contentType: "application/json",
+                        type: "POST",
+                        data: JSON.stringify(dataPassword),
+                        success: function (res) {
+                            $("#"+id+".deleteUser").removeClass("invisible");
+                            $("#"+id+".changePasswordUser").removeClass("invisible");
+                            $("#"+id+".changeField").addClass("invisible");
+                            alert(res);
+                        },
+                        error: function (res) {
+                            alert("Error:" + res);
+                        }
+                    })
+                }else{
+                    alert("Enter new password");
+                }
+            });
+            $(".changeField#"+id).blur(function () {
+                $("#"+id+".changePasswordInput").text("");
+                $("#"+id+".deleteUser").removeClass("invisible");
+                $("#"+id+".changePasswordUser").removeClass("invisible");
+                $("#"+id+".changeField").addClass("invisible");
+            });
         })
     })
 

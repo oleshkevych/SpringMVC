@@ -28,8 +28,20 @@ public class UserOrderServiceImpl implements UserOrderService{
     }
 
     @Override
-    public void delete(UserOrder userOrder) {
+    public void delete(int id) {
+        UserOrder uo = userOrderRepository.findOne(id);
+        uo.setThisOrderDeleted(true);
+        save(uo);
+    }
+
+    @Override
+    public void deleteUSERORDER(UserOrder userOrder) {
         userOrderRepository.delete(userOrder);
+    }
+
+
+    public List<UserOrder> findAllUO() {
+        return userOrderRepository.findAll().stream().filter(userOrder -> !userOrder.isThisOrderDeleted()).collect(Collectors.toList());
     }
 
     @Override
@@ -39,24 +51,24 @@ public class UserOrderServiceImpl implements UserOrderService{
 
     @Override
     public List<UserOrder> findFeeds() {
-        return findAll().stream().filter(userOrder -> userOrder.getOrderType() == OrderType.FEED).collect(Collectors.toList());
+        return findAllUO().stream().filter(userOrder -> userOrder.getOrderType() == OrderType.FEED).collect(Collectors.toList());
     }
 
     @Override
     public List<UserOrder> findMeetings() {
-        return findAll().stream().filter(userOrder -> userOrder.getOrderType() == OrderType.MEETING).collect(Collectors.toList());
+        return findAllUO().stream().filter(userOrder -> userOrder.getOrderType() == OrderType.MEETING).collect(Collectors.toList());
 
     }
 
     @Override
     public List<UserOrder> findHunts() {
-        return findAll().stream().filter(userOrder -> userOrder.getOrderType() == OrderType.HUNTING).collect(Collectors.toList());
+        return findAllUO().stream().filter(userOrder -> userOrder.getOrderType() == OrderType.HUNTING).collect(Collectors.toList());
 
     }
 
     @Override
     public List<UserOrder> findSuicides() {
-        return findAll().stream().filter(userOrder -> userOrder.getOrderType() == OrderType.SUICIDE).collect(Collectors.toList());
+        return findAllUO().stream().filter(userOrder -> userOrder.getOrderType() == OrderType.SUICIDE).collect(Collectors.toList());
 
     }
 
@@ -97,19 +109,22 @@ public class UserOrderServiceImpl implements UserOrderService{
 
     @Override
     public List<UserOrder> findOurWeaponUsed() {
-        return findAll().stream().filter(userOrder -> userOrder.getWeapon() != Weapon.USERSWEAPON).collect(Collectors.toList());
+        return findAllUO().stream().filter(userOrder -> userOrder.getWeapon() != Weapon.USERSWEAPON).collect(Collectors.toList());
     }
 
     @Override
     public List<UserOrder> findCompleted() {
-        List<UserOrder> list = findAll();
+        List<UserOrder> list = findAllUO();
         List<UserOrder> result = new ArrayList<>();
         long currentTime = System.currentTimeMillis();
         for(UserOrder u: list){
-            ZonedDateTime zdt = u.getDate().atZone(ZoneId.of("Ukraine"));
-            long orderTime = zdt.toInstant().toEpochMilli();
-            if((orderTime<currentTime)){
-                result.add(u);
+            if(u.getDate()!=null) {
+
+                ZonedDateTime zdt = u.getDate().atZone(ZoneId.of("Ukraine"));
+                long orderTime = zdt.toInstant().toEpochMilli();
+                if ((orderTime < currentTime)) {
+                    result.add(u);
+                }
             }
         }
         return result;
@@ -117,16 +132,24 @@ public class UserOrderServiceImpl implements UserOrderService{
 
     @Override
     public List<UserOrder> findUncompleted() {
-        List<UserOrder> list = findAll();
+        List<UserOrder> list = findAllUO();
         List<UserOrder> result = new ArrayList<>();
         long currentTime = System.currentTimeMillis();
         for(UserOrder u: list){
-            ZonedDateTime zdt = u.getDate().atZone(ZoneId.of("Ukraine"));
-            long orderTime = zdt.toInstant().toEpochMilli();
-            if((orderTime>currentTime)){
-                result.add(u);
+            if(u.getDate()!=null) {
+                ZonedDateTime zdt = u.getDate().atZone(ZoneId.of("Ukraine"));
+
+                long orderTime = zdt.toInstant().toEpochMilli();
+                if ((orderTime > currentTime)) {
+                    result.add(u);
+                }
             }
         }
         return result;
     }
+
+//    @Override
+//    public UserOrder findfetchUserOrders(int id) {
+//        return userOrderRepository.findfetchUserOrders(id);
+//    }
 }

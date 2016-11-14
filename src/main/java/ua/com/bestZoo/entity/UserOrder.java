@@ -25,16 +25,23 @@ public class UserOrder {
     private int timeOfMeeting;
     private int distance;
     private boolean newOrder;
+    private boolean thisOrderDeleted;
 
     @ManyToOne
     private User user;
+
+    @ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name = "animal_userorder",
+            joinColumns = @JoinColumn(name = "userorder_id"),
+            inverseJoinColumns = @JoinColumn(name = "animal_id"))
+    private List<Animal> animalSet;
 
     public UserOrder() {
     }
 
     public UserOrder(OrderType orderType, String date, Weapon weapon, List<Animal> animals, int timeOfMeeting, User user, int distance, boolean isFree) {
         this.orderType = orderType;
-        this.date = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.date = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a"));
         this.weapon = weapon;
         this.animals = "";
         this.timeOfMeeting = timeOfMeeting;
@@ -42,6 +49,9 @@ public class UserOrder {
         this.distance = distance;
         this.price = 0;
         this.newOrder = true;
+        this.animalSet = animals;
+        this.thisOrderDeleted = false;
+        user.setQuantityActions(user.getQuantityActions()+1);
         for(Animal a:animals) {
             this.animals +=(a.getName()+" ");
 
@@ -77,51 +87,52 @@ public class UserOrder {
             }
 
         }
-        if(weapon == Weapon.KNIF){
-            price += 100;
-            if(isFree){
-                price -= 50;
-            }else{
-                price += 50;
-            }
-        }else if(weapon == Weapon.PISTOL){
-            price += 150;
-            if(!isFree){
+        if(orderType != OrderType.MEETING) {
+            if (weapon == Weapon.KNIF) {
+                price += 100;
+                if (isFree) {
+                    price -= 50;
+                } else {
+                    price += 50;
+                }
+            } else if (weapon == Weapon.PISTOL) {
+                price += 150;
+                if (!isFree) {
+                    price += 100;
+                }
+            } else if (weapon == Weapon.M16) {
+                price += 250;
+                if (!isFree) {
+                    price += 200;
+                }
+            } else if (weapon == Weapon.BARRETT) {
+                price += 500;
+                if (distance <= 50) {
+                    price += 1000;
+                } else if (distance <= 500) {
+                    price += 500;
+                } else if (distance > 500) {
+                    price += 2000;
+                }
+                if (isFree) {
+                    price -= 100;
+                }
+            } else if (weapon == Weapon.BAZOOKA) {
+                price += 1500;
+                if (distance <= 50) {
+                    price += 1000;
+                } else if (distance <= 500) {
+                    price += 500;
+                } else if (distance > 500) {
+                    price += 2000;
+                }
+                if (isFree) {
+                    price -= 300;
+                }
+            } else if (weapon == Weapon.USERSWEAPON) {
                 price += 100;
             }
-        }else if(weapon == Weapon.M16){
-            price += 250;
-            if(!isFree){
-                price += 200;
-            }
-        }else if(weapon == Weapon.BARRETT){
-            price += 500;
-            if(distance<50){
-                price += 1000;
-            }else if(distance<500){
-                price += 500;
-            }else if(distance>500){
-                price += 2000;
-            }
-            if(isFree){
-                price -= 100;
-            }
-        }else if(weapon == Weapon.BAZOOKA){
-            price += 1500;
-            if(distance<=50){
-                price += 1000;
-            }else if(distance<=500){
-                price += 500;
-            }else if(distance>500){
-                price += 2000;
-            }
-            if(isFree){
-                price -= 300;
-            }
-        }else if(weapon == Weapon.USERSWEAPON){
-            price += 100;
         }
-
         if(timeOfMeeting<=60){
             price += 50;
         }else if(timeOfMeeting<=90){
@@ -150,6 +161,22 @@ public class UserOrder {
         }else if(user.getQuantityFeeds()>5){
             user.setBonuses(800);
         }
+    }
+
+    public boolean isThisOrderDeleted() {
+        return thisOrderDeleted;
+    }
+
+    public void setThisOrderDeleted(boolean delete) {
+        this.thisOrderDeleted = delete;
+    }
+
+    public List<Animal> getAnimalSet() {
+        return animalSet;
+    }
+
+    public void setAnimalSet(List<Animal> animalSet) {
+        this.animalSet = animalSet;
     }
 
     public int getId() {

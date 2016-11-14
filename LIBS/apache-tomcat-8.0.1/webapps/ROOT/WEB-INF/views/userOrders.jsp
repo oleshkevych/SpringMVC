@@ -14,6 +14,7 @@ prefix="sec" %>
     <title>Your Orders</title>
     <link type="text/css" rel="stylesheet" href="resources/homeStyle.css">
     <link type="text/css" rel="stylesheet" href="resources/userOrders.css">
+    <link type="text/css" rel="stylesheet" href="resources/newOrder.css">
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <!-- Bootstrap -->
     <link href="resources/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -94,9 +95,61 @@ ${user}
 
     <div id="container">
       <div>
-          <label>Your orders:</label>
+          <div class="container data">
+              <div class="form-group">
 
-          <label>${user11}</label>
+                  <p>Enter animal's photo:</p>
+                  <div id="formUpload">
+                      <label for="file">File to upload:</label>
+                      <img id="avaImage" src="${activeUser.pathImage}" alt="Image">
+                      <input type="file" name="file" id="file" class="form-control inputAnim"><br/>
+                      <p style="color: red" class="invisible" id="errorUpload"></p>
+                      <%--<label for="submit">Press on image to upload new image!</label>--%>
+                      <%--<input type="submit" value="Upload" id="submit" class="form-control inputAnim">--%>
+                  </div>
+                  <%--<div class="input-group date invisible" id="formDelete">--%>
+                      <%--<label for="deleteI" id="confLabel">Your file <span></span> was uploaded.</label>--%>
+                      <%--<input type="submit" value="Reload the file" id="deleteI" class="form-control inputAnim">--%>
+                  <%--</div>--%>
+              </div>
+              <div id="propertiesU">
+              <div class="nameU">
+                  <label id="nameU" style="cursor: pointer">user name: ${activeUser.userName()}</label>
+                  <input id="nameUChanged" class="invisible" type="text" value="${activeUser.userName()}"/>
+              </div>
+              <div class="phoneU">
+                  <label id="phoneU" style="cursor: pointer">phone number: ${activeUser.phoneNumber}</label>
+                  <input id="phoneUChanged" class="invisible" type="text" value="${activeUser.phoneNumber}"/>
+              </div>
+              <div class="passwordU">
+                  <label id="passwordU" style="cursor: pointer">Change your password</label>
+                  <input id="passwordUChanged" class="invisible" type="text" value="password"/>
+              </div>
+              <div class="emailU">
+                  <label id="emailU" style="cursor: pointer">email: ${activeUser.email}</label>
+                  <input id="emailUChanged" class="invisible" type="text" value="${activeUser.email}"/>
+              </div>
+              <div class="bonusesU">
+                  <label id="bonusesU">Your bonuses: ${activeUser.bonuses}</label>
+              </div>
+              <div class="actionsU">
+                  <label id="actionsU">Your actions: ${activeUser.quantityActions}</label>
+              </div>
+              <div class="deleteU">
+                  <button id="deleteU" class="btn btn-danger" style="cursor: pointer">DELETE</button>
+              </div>
+              </div>
+              <div class="ordersU">
+
+                      <label>Orders</label>
+                  <ul id="ordersU">
+                      <c:forEach var="a" items="${activeUser.userOrders}">
+                          <li class="${a.id}" style="cursor: pointer">animals: ${a.animals}, date: ${a.date}, price: ${a.price}</li>
+                          <br>
+                      </c:forEach>
+                  </ul>
+              </div>
+          </div>
       </div>
     </div>
 
@@ -140,7 +193,263 @@ ${user}
     </div>
 
 </div>
+            <input type="hidden" name="csrf_name" value="${_csrf.parameterName}"/>
+            <input type="hidden" name="csrf_value" value="${_csrf.token}"/>
+<script type="text/javascript">
+    $("#nameU").click(function(event){
+        event.preventDefault();
+        $("#nameU").addClass("invisible");
+        $("#nameUChanged").removeClass("invisible");
+        var oldValue = $("#nameUChanged").val();
+        $("#nameUChanged").change(function () {
+            var newValue = $("#nameUChanged").val();
+            if((oldValue != newValue)&&(newValue != "")) {
+                $.ajax({
+                    url: "uploadName?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                    contentType: "application/json",
+                    type: "POST",
+                    data: newValue,
+                    success: function (res) {
+                        $("#nameUChanged").addClass("invisible");
+                        $("#nameU").text(newValue);
+                        $("#nameU").removeClass("invisible");
+                    },
+                    error: function (res) {
+                        alert("Error:" + res);
+                    }
+                })
+            }
+        });
+        $("#nameUChanged").blur(function () {
+            var newValue = $("#nameUChanged").val();
+            if((oldValue != newValue)&&(newValue != "")) {
+                $.ajax({
+                    url: "uploadName?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                    contentType: "application/json",
+                    type: "POST",
+                    data: newValue,
+                    success: function (res) {
+                        $("#nameUChanged").addClass("invisible");
+                        $("#nameU").text(newValue);
+                        $("#nameU").removeClass("invisible");
+                    },
+                    error: function (res) {
+                        alert("Error:" + res);
+                    }
+                })
+            }
+        });
+    });
 
+    $("#phoneU").click(function(event){
+        event.preventDefault();
+        $("#phoneU").addClass("invisible");
+        $("#phoneUChanged").removeClass("invisible");
+        var oldValue = $("#phoneUChanged").val();
+        $("#phoneUChanged").change(function () {
+            var newValue = $("#phoneUChanged").val();
+            if((oldValue != newValue)&&(newValue != "")) {
+                $.ajax({
+                    url: "uploadPhone?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                    contentType: "application/json",
+                    type: "POST",
+                    data: newValue,
+                    success: function (res) {
+                        $("#phoneUChanged").addClass("invisible");
+                        $("#phoneU").text(newValue);
+                        $("#phoneU").removeClass("invisible");
+                    },
+                    error: function (res) {
+                        alert("Error:" + res);
+                    }
+                })
+            }
+        });
+        $("#phoneUChanged").blur(function () {
+            var newValue = $("#phoneUChanged").val();
+            if((oldValue != newValue)&&(newValue != "")) {
+                $.ajax({
+                    url: "uploadPhone?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                    contentType: "application/json",
+                    type: "POST",
+                    data: newValue,
+                    success: function (res) {
+                        $("#phoneUChanged").addClass("invisible");
+                        $("#phoneU").text(newValue);
+                        $("#phoneU").removeClass("invisible");
+                    },
+                    error: function (res) {
+                        alert("Error:" + res);
+                    }
+                })
+            }
+        });
+    });
+
+    $("#passwordU").click(function(event){
+        event.preventDefault();
+        $("#passwordU").addClass("invisible");
+        $("#passwordUChanged").removeClass("invisible");
+        var oldValue = $("#passwordUChanged").val();
+        $("#passwordUChanged").change(function () {
+            var newValue = $("#passwordUChanged").val();
+            if((oldValue != newValue)&&(newValue != "")) {
+                $.ajax({
+                    url: "uploadPassword?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                    contentType: "application/json",
+                    type: "POST",
+                    data: newValue,
+                    success: function (res) {
+                        $("#passwordUChanged").addClass("invisible");
+                        $("#passwordU").text(newValue);
+                        $("#passwordU").removeClass("invisible");
+                    },
+                    error: function (res) {
+                        alert("Error:" + res);
+                    }
+                })
+            }
+        });
+        $("#passwordUChanged").blur(function () {
+            var newValue = $("#passwordUChanged").val();
+            if((oldValue != newValue)&&(newValue != "")) {
+                $.ajax({
+                    url: "uploadPassword?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                    contentType: "application/json",
+                    type: "POST",
+                    data: newValue,
+                    success: function (res) {
+                        $("#passwordUChanged").addClass("invisible");
+                        $("#passwordU").text(newValue);
+                        $("#passwordU").removeClass("invisible");
+                    },
+                    error: function (res) {
+                        alert("Error:" + res);
+                    }
+                })
+            }
+        });
+    });
+
+    $("#emailU").click(function(event){
+        event.preventDefault();
+        $("#emailU").addClass("invisible");
+        $("#emailUChanged").removeClass("invisible");
+        var oldValue = $("#emailUChanged").val();
+        $("#emailUChanged").change(function () {
+            var newValue = $("#emailUChanged").val();
+            if((oldValue != newValue)&&(newValue != "")) {
+                $.ajax({
+                    url: "uploadEmail?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                    contentType: "application/json",
+                    type: "POST",
+                    data: newValue,
+                    success: function (res) {
+                        $("#emailUChanged").addClass("invisible");
+                        $("#emailU").text(newValue);
+                        $("#emailU").removeClass("invisible");
+                    },
+                    error: function (res) {
+                        alert("Error:" + res);
+                    }
+                })
+            }
+        });
+        $("#emailUChanged").blur(function () {
+            var newValue = $("#emailUChanged").val();
+            if((oldValue != newValue)&&(newValue != "")) {
+                $.ajax({
+                    url: "uploadEmail?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                    contentType: "application/json",
+                    type: "POST",
+                    data: newValue,
+                    success: function (res) {
+                        $("#emailUChanged").addClass("invisible");
+                        $("#emailU").text(newValue);
+                        $("#emailU").removeClass("invisible");
+                    },
+                    error: function (res) {
+                        alert("Error:" + res);
+                    }
+                })
+            }
+        });
+    });
+
+    $("#deleteU").click(function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: "deleteU?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+            contentType: "application/json",
+            type: "POST",
+            success: function () {
+                window.location.assign("/login");
+            }
+        })
+    });
+
+    $("#ordersU li").click(function(event){
+        event.preventDefault();
+        var orderId = $(this).attr('class');
+        console.log(orderId);
+            $.ajax({
+                url: "uploadOrder?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                data: orderId,
+                success: function (res) {
+                    window.location.assign("/addOrder");
+                },
+                error: function (res) {
+                    alert("Error:" +res);
+                }
+            })
+    });
+
+    $("#file").change(function (event) {
+        event.preventDefault();
+        if ($("#file").val().length !== 0) {
+            var formData = new FormData();
+            formData.append('file', $('input[type=file]')[0].files[0]);
+            formData.append('name', $('input[type=file]')[0].files[0].name);
+
+            $.ajax({
+                url: "uploadFile?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                processData: false,
+                contentType: false,
+                type: "POST",
+                data: formData,
+                success: function (res) {
+
+                    $.ajax({
+                        url: "uploadImage?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                        contentType: "application/json",
+                        type: "POST",
+                        success: function (res) {
+                            alert(res);
+                            $("#avaImage").attr("src",res);
+
+                        },
+                        error: function (res) {
+                            alert(res);
+                        }
+                    })
+
+
+                },
+                error: function (res) {
+                    $("#errorUpload").text(res);
+                    $("#errorUpload").removeClass("invisible");
+
+                }
+            })
+
+        } else {
+            alert("Give me the picture!!!")
+        }
+    })
+
+</script>
 
 </body>
 </html>

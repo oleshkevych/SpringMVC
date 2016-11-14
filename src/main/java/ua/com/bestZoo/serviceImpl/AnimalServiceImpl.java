@@ -35,8 +35,8 @@ public class AnimalServiceImpl implements AnimalService {
         animalRepository.save(animal);
     }
 
-    public void delete(Animal animal) {
-        animalRepository.delete(animal);
+    public void delete(int id) {
+        animalRepository.delete(id);
     }
 
     public List<Animal> findAll() {
@@ -75,5 +75,10 @@ public class AnimalServiceImpl implements AnimalService {
 
     public Animal findById(int id) {
         return animalRepository.findOne(id);
+    }
+
+    @Override
+    public Animal findfetchAnimal(int id) {
+        return animalRepository.findfetchAnimal(id);
     }
 }

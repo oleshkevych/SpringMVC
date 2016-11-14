@@ -11,6 +11,8 @@
 
 
         <security:intercept-url pattern="/admin" method="GET" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/addOrder" method="GET" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/myOrders" method="GET" access="hasRole('ROLE_USER')"/>
         <security:intercept-url pattern="/loginH" access="permitAll" />
         <security:intercept-url pattern="/login" access="permitAll" />
 

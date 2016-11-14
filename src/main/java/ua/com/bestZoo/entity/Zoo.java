@@ -28,6 +28,7 @@ public class Zoo {
     private Set<ZooOrder> zooOrders;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="zoo")
+    @Fetch(value = FetchMode.SUBSELECT)
     private Set<Animal> animals;
 
 

@@ -41,7 +41,7 @@ public class RegistrationController {
             }
         }
         User user = new User(nameUser, phoneUser, p1, emailUser);
-        userService.save(user);
+        userService.saveFull(user);
 
 		return "home";
 	}

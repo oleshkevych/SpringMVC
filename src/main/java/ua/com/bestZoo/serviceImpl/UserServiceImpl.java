@@ -5,22 +5,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.bestZoo.entity.Role;
-import ua.com.bestZoo.entity.User;
-import ua.com.bestZoo.entity.UserRole;
-import ua.com.bestZoo.entity.Zoo;
+import ua.com.bestZoo.entity.*;
+import ua.com.bestZoo.repository.UserOrderRepository;
 import ua.com.bestZoo.repository.UserRepository;
+import ua.com.bestZoo.repository.ZooOrderRepository;
 import ua.com.bestZoo.repository.ZooRepository;
 import ua.com.bestZoo.service.UserService;
-import ua.com.bestZoo.service.ZooService;
 
 @Service("userDetailsService")
 public class UserServiceImpl  implements UserService, UserDetailsService{
@@ -29,20 +25,27 @@ public class UserServiceImpl  implements UserService, UserDetailsService{
 	private UserRepository userRepository;
 	@Autowired
 	private ZooRepository zooRepository;
-	
+	@Autowired
+	private UserOrderRepository userOrderRepository;
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 	
 	public void save(User user){
 		user.setRole(Role.ROLE_USER);
-		user.setPassword(encoder.encode(user.getPassword()));
+		userRepository.save(user);
+	}
 
+	@Override
+	public void saveFull(User user) {
+		user.setRole(Role.ROLE_USER);
+		user.setPassword(encoder.encode(user.getPassword()));
 		if(zooRepository.findAll().size()==0){
 			zooRepository.save(new Zoo(100));
 		}
 		user.setZoo(zooRepository.findOne(1));
 		userRepository.save(user);
 	}
+
 
 	public List<User> findAll() {
 		return userRepository.findAll();
@@ -62,11 +65,20 @@ public class UserServiceImpl  implements UserService, UserDetailsService{
 		return userRepository.findByUsername(username);
 	}
 
-	@Modifying
-	@Transactional
-	@Override
+//	@Modifying
+//	@Transactional(noRollbackFor = Exception.class, propagation= Propagation.REQUIRED)
 	public User fetchUser(int id) {
-		return userRepository.fetchUser(id);
+		User u = new User();
+		try {
+			u = userRepository.fetchUser(id);
+			List<UserOrder> list =(u.getUserOrders().stream().filter(userOrder -> !userOrder.isThisOrderDeleted()).collect(Collectors.toList()));
+			u.setUserOrders(list);
+		}catch(Exception e){
+			System.out.println(e);
+			u = userRepository.findOne(id);
+			u.setUserOrders(new ArrayList<>());
+		}
+		return u;
 	}
 
 	public List<User> findAllHunters() {

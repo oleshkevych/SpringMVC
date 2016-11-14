@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface AnimalService {
     void save(Animal animal);
-    void delete(Animal animal);
+    void delete(int id);
     List<Animal> findAll();
     List<Animal> findByType(AnimalType animalType);
     List<Animal> findAlive();
@@ -19,6 +19,7 @@ public interface AnimalService {
     List<Animal> findForSale();
     Animal getOldest(String name);
     Animal findById(int id);
+    Animal findfetchAnimal(int id);
 
 
 }
