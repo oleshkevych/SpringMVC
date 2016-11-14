@@ -3,6 +3,7 @@ package ua.com.bestZoo.entity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Created by vov4ik on 11/2/2016.
@@ -16,105 +17,122 @@ public class UserOrder {
 
     @Enumerated
     private OrderType orderType;
-    private int price = 0;
+    private int price;
     private LocalDateTime date;
     @Enumerated
     private Weapon weapon;
-    private String animal;
+    private String animals;
     private int timeOfMeeting;
     private int distance;
+    private boolean newOrder;
+    private boolean thisOrderDeleted;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne
     private User user;
+
+    @ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name = "animal_userorder",
+            joinColumns = @JoinColumn(name = "userorder_id"),
+            inverseJoinColumns = @JoinColumn(name = "animal_id"))
+    private List<Animal> animalSet;
 
     public UserOrder() {
     }
 
-    public UserOrder(OrderType orderType, String date, Weapon weapon, Animal animal, int timeOfMeeting, User user, int distance, boolean isFree) {
+    public UserOrder(OrderType orderType, String date, Weapon weapon, List<Animal> animals, int timeOfMeeting, User user, int distance, boolean isFree) {
         this.orderType = orderType;
-        this.date = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.date = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a"));
         this.weapon = weapon;
-        this.animal = animal.getName();
+        this.animals = "";
         this.timeOfMeeting = timeOfMeeting;
         this.user = user;
         this.distance = distance;
+        this.price = 0;
+        this.newOrder = true;
+        this.animalSet = animals;
+        this.thisOrderDeleted = false;
+        user.setQuantityActions(user.getQuantityActions()+1);
+        for(Animal a:animals) {
+            this.animals +=(a.getName()+" ");
 
-        if(orderType == OrderType.MEETING){
-            price += 500;
-            user.setMeetinger(true);
-        }else if(orderType == OrderType.SUICIDE){
-            price += 2000;
-            user.setSuicide(true);
-        }else if(orderType == OrderType.HUNT){
-            price = animal.getPrice();
-            price += 1000;
-            if(animal.getAnimalType() == AnimalType.CHEEP){
-                price += 100;
-            }else if(animal.getAnimalType() == AnimalType.AVERAGE){
+            if (orderType == OrderType.MEETING) {
                 price += 500;
-            }else if(animal.getAnimalType() == AnimalType.EXPANSIVE){
-                price += 1500;
-            }
-            user.setHunter(true);
-        }else if(orderType == OrderType.FEED){
-            price = animal.getPrice();
-            price += 2000;
-            if(animal.getAnimalType() == AnimalType.CHEEP){
-                price += 100;
-            }else if(animal.getAnimalType() == AnimalType.AVERAGE){
-                price += 500;
-            }else if(animal.getAnimalType() == AnimalType.EXPANSIVE){
-                price += 1500;
-            }
-            user.setFeeder(true);
-            user.setQuantityFeeds(user.getQuantityFeeds()+1);
-        }
-
-        if(weapon == Weapon.KNIF){
-            price += 100;
-            if(isFree){
-                price -= 50;
-            }else{
-                price += 50;
-            }
-        }else if(weapon == Weapon.PISTOL){
-            price += 150;
-            if(!isFree){
-                price += 100;
-            }
-        }else if(weapon == Weapon.M16){
-            price += 250;
-            if(!isFree){
-                price += 200;
-            }
-        }else if(weapon == Weapon.BARRETT){
-            price += 500;
-            if(distance<50){
-                price += 1000;
-            }else if(distance<500){
-                price += 500;
-            }else if(distance>500){
+                user.setMeetinger(true);
+            } else if (orderType == OrderType.SUICIDE) {
                 price += 2000;
-            }
-            if(isFree){
-                price -= 100;
-            }
-        }else if(weapon == Weapon.BAZOOKA){
-            price += 1500;
-            if(distance<50){
+                user.setSuicide(true);
+            } else if (orderType == OrderType.HUNTING) {
+                price = a.getPrice();
                 price += 1000;
-            }else if(distance<500){
-                price += 500;
-            }else if(distance>500){
+                if (a.getAnimalType() == AnimalType.CHEEP) {
+                    price += 100;
+                } else if (a.getAnimalType() == AnimalType.AVERAGE) {
+                    price += 500;
+                } else if (a.getAnimalType() == AnimalType.EXPANSIVE) {
+                    price += 1500;
+                }
+                user.setHunter(true);
+            } else if (orderType == OrderType.FEED) {
+                price = a.getPrice();
                 price += 2000;
+                if (a.getAnimalType() == AnimalType.CHEEP) {
+                    price += 100;
+                } else if (a.getAnimalType() == AnimalType.AVERAGE) {
+                    price += 500;
+                } else if (a.getAnimalType() == AnimalType.EXPANSIVE) {
+                    price += 1500;
+                }
+                user.setFeeder(true);
+                user.setQuantityFeeds(user.getQuantityFeeds() + 1);
             }
-            if(isFree){
-                price -= 300;
-            }
-        }else if(weapon == Weapon.USERSWEAPON){
-            price += 100;
-        }
 
+        }
+        if(orderType != OrderType.MEETING) {
+            if (weapon == Weapon.KNIF) {
+                price += 100;
+                if (isFree) {
+                    price -= 50;
+                } else {
+                    price += 50;
+                }
+            } else if (weapon == Weapon.PISTOL) {
+                price += 150;
+                if (!isFree) {
+                    price += 100;
+                }
+            } else if (weapon == Weapon.M16) {
+                price += 250;
+                if (!isFree) {
+                    price += 200;
+                }
+            } else if (weapon == Weapon.BARRETT) {
+                price += 500;
+                if (distance <= 50) {
+                    price += 1000;
+                } else if (distance <= 500) {
+                    price += 500;
+                } else if (distance > 500) {
+                    price += 2000;
+                }
+                if (isFree) {
+                    price -= 100;
+                }
+            } else if (weapon == Weapon.BAZOOKA) {
+                price += 1500;
+                if (distance <= 50) {
+                    price += 1000;
+                } else if (distance <= 500) {
+                    price += 500;
+                } else if (distance > 500) {
+                    price += 2000;
+                }
+                if (isFree) {
+                    price -= 300;
+                }
+            } else if (weapon == Weapon.USERSWEAPON) {
+                price += 100;
+            }
+        }
         if(timeOfMeeting<=60){
             price += 50;
         }else if(timeOfMeeting<=90){
@@ -127,24 +145,38 @@ public class UserOrder {
 
         price -= user.getBonuses();
 
-        if(price<1000){
+        if(price<=1000){
             user.setBonuses(50);
-        }else if(price<1500){
+        }else if(price<=1500){
             user.setBonuses(100);
-        }else if(price<5000){
+        }else if(price<=5000){
             user.setBonuses(200);
         }else if(price>5000){
             user.setBonuses(500);
         }
-        if(user.getQuantityFeeds()>1){
-            user.setBonuses(100);
-        }else if(user.getQuantityFeeds()<2){
+        if(user.getQuantityFeeds()<=2){
             user.setBonuses(400);
-        }else if(user.getQuantityFeeds()<5){
+        }else if(user.getQuantityFeeds()<=5){
             user.setBonuses(600);
         }else if(user.getQuantityFeeds()>5){
             user.setBonuses(800);
         }
+    }
+
+    public boolean isThisOrderDeleted() {
+        return thisOrderDeleted;
+    }
+
+    public void setThisOrderDeleted(boolean delete) {
+        this.thisOrderDeleted = delete;
+    }
+
+    public List<Animal> getAnimalSet() {
+        return animalSet;
+    }
+
+    public void setAnimalSet(List<Animal> animalSet) {
+        this.animalSet = animalSet;
     }
 
     public int getId() {
@@ -187,12 +219,20 @@ public class UserOrder {
         this.weapon = weapon;
     }
 
-    public String getAnimal() {
-        return animal;
+    public boolean isNewOrder() {
+        return newOrder;
     }
 
-    public void setAnimal(String animal) {
-        this.animal = animal;
+    public void setNewOrder(boolean newOrder) {
+        this.newOrder = newOrder;
+    }
+
+    public String getAnimals() {
+        return animals;
+    }
+
+    public void setAnimals(String animal) {
+        this.animals = animal;
     }
 
     public int getTimeOfMeeting() {
@@ -227,7 +267,7 @@ public class UserOrder {
                 ", price=" + price +
                 ", date=" + date +
                 ", weapon=" + weapon +
-                ", animal='" + animal + '\'' +
+                ", animal='" + animals + '\'' +
                 ", timeOfMeeting=" + timeOfMeeting +
                 ", distance=" + distance +
                 ", user=" + user +

@@ -10,9 +10,11 @@ import java.util.List;
 public interface ZooOrderService {
 
     void save(ZooOrder zooOrder);
-    void delete(ZooOrder zooOrder);
+    void delete(int id);
+    void deleteZOOORDER(ZooOrder zooOrder);
     List<ZooOrder> findAll();
     List<ZooOrder> findCompleted();
     List<ZooOrder> findUncompleted();
+    ZooOrder findOne(int id);
 
 }

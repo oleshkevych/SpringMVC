@@ -14,6 +14,9 @@ public interface ZooService {
 
     int findEmptyCages();
     Zoo fetchZooUsers();
+    Zoo fetchZooAnimals();
+    Zoo fetchZooOrders();
+    List<Zoo> findAll();
     Zoo getZooFromDB();
     void save(Zoo zoo);
 }

@@ -1,6 +1,10 @@
 package ua.com.bestZoo.entity;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vov4ik on 11/2/2016.
@@ -11,27 +15,54 @@ public class Animal {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
     private String name;
+    @Type(type="text")
     private String description;
     private int age;
     private int price;
     private boolean alive;
-
+    private String imagePath;
+    private boolean forSale;
 
     @Enumerated
     private AnimalType animalType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Zoo zoo;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "animal_userorder",
+            joinColumns = @JoinColumn(name = "animal_id"),
+            inverseJoinColumns = @JoinColumn(name = "userorder_id"))
+    private List<UserOrder> userOrders = new ArrayList<>();
 
     public Animal() {
     }
 
-    public Animal(String name, String description, int age, int price, AnimalType animalType) {
+    public Animal(String name, String description, int age, int price, AnimalType animalType, boolean forSale, String imagePath) {
         this.name = name;
         this.description = description;
         this.age = age;
         this.price = price;
         this.animalType = animalType;
+        this.forSale = forSale;
+        this.imagePath = imagePath;
+        alive = true;
+    }
+
+    public List<UserOrder> getUserOrders() {
+        return userOrders;
+    }
+
+    public void setUserOrders(List<UserOrder> userOrders) {
+        this.userOrders = userOrders;
+    }
+
+    public Zoo getZoo() {
+        return zoo;
+    }
+
+    public void setZoo(Zoo zoo) {
+        this.zoo = zoo;
     }
 
     public boolean isAlive() {
@@ -70,12 +101,28 @@ public class Animal {
         this.description = description;
     }
 
+    public boolean isForSale() {
+        return forSale;
+    }
+
+    public void setForSale(boolean forSale) {
+        this.forSale = forSale;
+    }
+
     public int getAge() {
         return age;
     }
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public int getPrice() {

@@ -13,4 +13,8 @@ public interface ZooRepository extends JpaRepository<Zoo, Integer> {
 
     @Query(value="select distinct z from Zoo z left join fetch z.users c where z.id =:id")
     public Zoo fetchZooUsers(@Param("id") int id);
+    @Query(value="select distinct z from Zoo z left join fetch z.animals c where z.id =:id")
+    public Zoo fetchZooAnimals(@Param("id") int id);
+    @Query(value="select distinct z from Zoo z left join fetch z.zooOrders c where z.id =:id")
+    public Zoo fetchZooOrders(@Param("id") int id);
 }

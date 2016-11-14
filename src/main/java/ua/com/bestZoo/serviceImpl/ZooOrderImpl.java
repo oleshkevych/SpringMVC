@@ -20,17 +20,25 @@ public class ZooOrderImpl implements ZooOrderService{
 
 
     public void save(ZooOrder zooOrder) {
+
         zooOrderRepository.save(zooOrder);
     }
 
     @Override
-    public void delete(ZooOrder zooOrder) {
+    public void delete(int id) {
+        ZooOrder zo = zooOrderRepository.findOne(id);
+        zo.setThisOrderDeleted(true);
+        save(zo);
+    }
+
+    @Override
+    public void deleteZOOORDER(ZooOrder zooOrder) {
         zooOrderRepository.delete(zooOrder);
     }
 
     @Override
     public List<ZooOrder> findAll() {
-        return zooOrderRepository.findAll();
+        return zooOrderRepository.findAll().stream().filter(zooOrder -> !zooOrder.isThisOrderDeleted()).collect(Collectors.toList());
     }
 
     @Override
@@ -41,5 +49,10 @@ public class ZooOrderImpl implements ZooOrderService{
     @Override
     public List<ZooOrder> findUncompleted() {
         return findAll().stream().filter(zooOrder -> !zooOrder.isCompleted()).collect(Collectors.toList());
+    }
+
+    @Override
+    public ZooOrder findOne(int id) {
+        return zooOrderRepository.findOne(id);
     }
 }
