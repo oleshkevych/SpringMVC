@@ -69,10 +69,11 @@ public class AdminController {
             System.out.println("orderUsers "+e);
         }
         try{
-            int zooC = zooService.fetchZooOrders().getQuantityCages();
             int aq = animalService.findAlive().size();
+            int zooC = zooService.fetchZooOrders().getQuantityCages();
             model.addAttribute("cages", (zooC - aq));
         }catch(Exception e){
+            model.addAttribute("cages", (100));
             System.out.println("cages3 "+e);
         }try {
             model.addAttribute("animals", animalService.findAlive());
@@ -239,6 +240,7 @@ public class AdminController {
 
     @RequestMapping(value={"/changeAnimal"}, method=RequestMethod.GET)
     public String changeAnimal(Model model) {
+
         if(activeUser.getZooOrder() == null) {
             model.addAttribute("animalToChange", true);
             model.addAttribute("zooOrderToChange", false);

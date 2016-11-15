@@ -1,6 +1,7 @@
 <%@ page import="ua.com.bestZoo.entity.UserRole" %>
 <%@ page import="ua.com.bestZoo.entity.Weapon" %>
 <%@ page import="ua.com.bestZoo.entity.OrderType" %>
+<%@ page import="ua.com.bestZoo.entity.AnimalType" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
          pageEncoding="ISO-8859-1" %>
 
@@ -34,11 +35,16 @@
 
 </head>
 <body>
+<c:set var="cheep" value="<%=AnimalType.CHEEP%>"/>
+<c:set var="average" value="<%=AnimalType.AVERAGE%>"/>
+<c:set var="expansive" value="<%=AnimalType.EXPANSIVE%>"/>
 <c:set var="user" value="${userRoleText}"/>
 <c:set var="NOHUNTER" value="<%=UserRole.NOTENOUGHSMART.getTexts()%>"/>
 
+<c:set var="user" value="${userRoleText}"/>
+<c:set var="HUNTER" value="<%=UserRole.HUNTER.getTexts()%>"/>
 <c:choose>
-<c:when test="${(user != NOHUNTER)}">
+<c:when test="${(user eq HUNTER)}">
 <div id="pageH">
     <div id="headerH">
         <div id="logo">
@@ -56,7 +62,7 @@
                     <div class="navbarLists">
                         <div>
                             <ul class="nav nav-pills">
-                                <li role="presentation" class="active footerList"><a href="h">Home</a></li>
+                                <li role="presentation" class="footerList"><a href="h">Home</a></li>
                                 <li role="presentation" class="footerList"><a href="forSale">For Sale</a></li>
                                 <li role="presentation" class="footerList"><a href="textFormForAllQuestions">Help us</a>
                                 </li>
@@ -76,14 +82,31 @@
                                 </sec:authorize>
 
                                 <sec:authorize access="isAuthenticated()">
-                                    <li role="presentation" class="footerList"><a href="addOrder">Make new order</a>
-                                    </li>
-                                    <li role="presentation" class="footerList"><a href="myOrders">My orders</a></li>
+                                    <sec:authorize access="hasRole('ROLE_USER')" >
+                                        <li role="presentation" class="footerList active"><a href="addOrder">New Order</a></li>
+                                        <li role="presentation" class="footerList"><a href="myOrders">My Profile</a></li>
+                                    </sec:authorize>
+                                    <sec:authorize access="hasRole('ROLE_ADMIN')" >
+                                        <li role="presentation" class="footerList" style="margin: auto;"><a href="admin">Admin</a>
+                                        </li>
+                                    </sec:authorize>
                                     <li role="presentation" class="footerList">
                                         <sf:form action="logout" method="post" id="logoutForm">
                                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                             <button class="formRegistButton footerList">Log Out</button>
                                         </sf:form>
+                                        <script type="text/javascript">
+                                            $("#logoutForm").click(function () {
+                                                $.ajax({
+                                                    url: "logoutS?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                                                    contentType: "application/json",
+                                                    type: "POST",
+                                                    success: function (res) {
+                                                        console.log(res);
+                                                    }
+                                                })
+                                            });
+                                        </script>
                                     </li>
                                 </sec:authorize>
 
@@ -92,15 +115,19 @@
                         </div>
                         <div class="col-lg-6" id="searchBar">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search for...">
+                                <input type="text" class="form-control" placeholder="Search for..." id="searchInput">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">Go!</button>
+                                    <button class="btn btn-default" type="button" id="searchButton">Go!</button>
+                                    <script type="text/javascript" >
+                                         $("#searchButton").click(function(){
+                                             $("#searchInput").val("I don't want to do anything for you!");
+                                         });
+                                    </script>
                                   </span>
                             </div>
                         </div>
                     </div>
                 </div>
-
 
                 <div id="container">
                     <div class="wrapper">
@@ -108,7 +135,9 @@
                         <!--date-->
                         <div class="container data">
                             <div class="invisible" id="errorMessage">
-                                <p>This animal is not available on <span></span></p>
+                                <div id="tooltip">
+                                    <p>This animal is not available on <span></span></p>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <p>Select the date:</p>
@@ -255,7 +284,7 @@
                             </div>
 
                             <div class="dropdown" id="freedom">
-                                <span class="selLabel" id="selLabel-freedom">Select will the animal free</span>
+                                <span class="selLabel" id="selLabel-freedom">Will the animal free?</span>
                                 <input type="hidden" name="cd-dropdown">
                                 <ul class="dropdown-list" id="dropdown-list-freedom">
                                     <li data-value="1">
@@ -360,11 +389,13 @@
                         var dateS = $('#datetimepicker').val();
                         var animalS = animalId;
                         var timeS = $('#selLabel-time').text();
+                        var ot = "";
 
                         var dataVal = {
                             date: dateS,
                             id: animalS,
-                            time: timeS
+                            time: timeS,
+                            orderType: ot
                         };
                         $.ajax({
                             url: "validatingDate?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
@@ -380,8 +411,9 @@
                                     $('#errorMessage p span').text(resultMessage);
                                     $('#errorMessage').removeClass("invisible");
                                     $('#datetimepicker').text("");
+                                }else {
+                                    $('#errorMessage').addClass("invisible");
                                 }
-
                             }
                         });
                     });
@@ -477,11 +509,13 @@
                         var dateS = $('#datetimepicker').val();
                         var animalS = animalId;
                         var timeS = $('#selLabel-time').text();
+                        var ot = "";
 
                         var dataVal = {
                             date: dateS,
                             id: animalS,
-                            time: timeS
+                            time: timeS,
+                            orderType: ot
                         };
                         $.ajax({
                             url: "validatingDate?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
@@ -530,6 +564,39 @@
                         $('#selected-itemOrderType p span').text($('#selLabelOrderType').text());
 
                         $('#container-distance').removeClass('invisible');
+                        var dateS = $('#datetimepicker').val();
+                        var animalS = animalId;
+                        var timeS = $('#selLabel-time').text();
+                        var ot = $('#selLabelOrderType').text();
+
+                        var dataVal = {
+                            date: dateS,
+                            id: animalS,
+                            time: timeS,
+                            orderType: ot
+                        };
+                        $.ajax({
+                            url: "validatingDate?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                            contentType: "application/json",
+                            type: "POST",
+                            data: JSON.stringify(dataVal),
+                            success: function (res) {
+                                var resultAnswer = (res.split("!!!")[0] == "yes");
+                                var resultMessage = res.split("!!!")[1];
+                                if(resultAnswer){
+                                    $('#selLabel-time').text("Select time");
+                                    $('#selected-item-time p span').text("");
+                                    $('#errorMessage p span').text(resultMessage);
+                                    $('#selLabelOrderType').text("Select Type");
+                                    $('#selected-itemOrderType p span').text("");
+                                    $('#errorMessage').removeClass("invisible");
+                                    $('#datetimepicker').text("");
+
+                                }else {
+                                    $('#errorMessage').addClass("invisible");
+                                }
+                            }
+                        });
                     });
 
 
@@ -594,7 +661,6 @@
                                         success: function (res) {
                                             console.log(res);
                                             if(res == "redirect"){
-                                                $("#logoutForm").submit();
                                                 $("#logoutForm").serialize();
                                             }else {
                                                 window.location.assign("/addOrder");

@@ -26,11 +26,22 @@ prefix="sec" %>
 </head>
 <body>
 <c:set var="user" value="${userRoleText}"/>
-${user}
 <c:set var="HUNTER" value="<%=UserRole.HUNTER.getTexts()%>"/>
 <c:choose>
 <c:when test="${(user eq HUNTER)}">
 <div id="pageH">
+    <script type="text/javascript">
+        $("#logoutForm").click(function () {
+            $.ajax({
+                url: "logoutS?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                success: function (res) {
+                    console.log(res);
+                }
+            })
+        });
+    </script>
     <div id="headerH">
         <div id="logo">
             <a href="h"><img src="resources/images/logoH.jpg" alt="The Analog Specialists"/></a>
@@ -67,14 +78,31 @@ ${user}
                                 </sec:authorize>
 
                                 <sec:authorize access="isAuthenticated()">
-                                    <li role="presentation" class="footerList"><a href="addOrder">Make new order</a>
-                                    </li>
-                                    <li role="presentation" class="active footerList"><a href="myOrders">My orders</a></li>
+                                    <sec:authorize access="hasRole('ROLE_USER')" >
+                                        <li role="presentation" class="footerList"><a href="addOrder">New Order</a></li>
+                                        <li role="presentation" class="footerList active"><a href="myOrders">My Profile</a></li>
+                                    </sec:authorize>
+                                    <sec:authorize access="hasRole('ROLE_ADMIN')" >
+                                        <li role="presentation" class="footerList" style="margin: auto;"><a href="admin">Admin</a>
+                                        </li>
+                                    </sec:authorize>
                                     <li role="presentation" class="footerList">
-                                        <sf:form action="logout" method="post">
+                                        <sf:form action="logout" method="post" id="logoutForm">
                                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                             <button class="formRegistButton footerList">Log Out</button>
                                         </sf:form>
+                                        <script type="text/javascript">
+                                            $("#logoutForm").click(function () {
+                                                $.ajax({
+                                                    url: "logoutS?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                                                    contentType: "application/json",
+                                                    type: "POST",
+                                                    success: function (res) {
+                                                        console.log(res);
+                                                    }
+                                                })
+                                            });
+                                        </script>
                                     </li>
                                 </sec:authorize>
 
@@ -83,16 +111,19 @@ ${user}
                         </div>
                         <div class="col-lg-6" id="searchBar">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search for...">
+                                <input type="text" class="form-control" placeholder="Search for..." id="searchInput">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">Go!</button>
+                                    <button class="btn btn-default" type="button" id="searchButton">Go!</button>
+                                    <script type="text/javascript" >
+                                         $("#searchButton").click(function(){
+                                             $("#searchInput").val("I don't want to do anything for you!");
+                                         });
+                                    </script>
                                   </span>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
     <div id="container">
       <div>
           <div class="container data">
