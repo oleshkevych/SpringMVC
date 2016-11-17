@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="primary/Hibernate" uuid="feeccb11-6114-4a15-9ccc-1312d9ed6aa3">
+      <database-info product="MySQL" version="5.7.15-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
+      <user-name>root</user-name>
+      <user-password>dfc0dfcedfc8dfc9df90dfc7dfd3dfd9dfdbdfc6df90df85df85df9bdf98df9ddf84df9adf84df9adf84df9bdf90df99df99df9adf9cdf85dfd0dfc5dfc5dfe5dfc6dfcfdfd9dfc2dfc1dfcfdfdcdfd3dfc9dfc2</user-password>
+      <introspection-scope>zooOleshkevych:</introspection-scope>
+      <resolve-scope>zooOleshkevych:</resolve-scope>
+    </data-source>
+  </component>
+</project>
