@@ -379,7 +379,7 @@ prefix="sec" %>
                     data: newValue,
                     success: function (res) {
                         $("#emailUChanged").addClass("invisible");
-                        $("#emailU").text("email: "newValue);
+                        $("#emailU").text("email: "+newValue);
                         $("#emailU").removeClass("invisible");
                     },
                     error: function (res) {

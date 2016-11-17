@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -129,7 +130,27 @@ public class AdminController {
                     }
                     String name1 = "";
                     if(dir.listFiles() != null) {
-                        name1 = (dir.listFiles().length) + name.substring(name.lastIndexOf("."), name.length());
+                        int lastNumber = 0;
+                        System.out.println("!fileList"+ Arrays.toString(dir.listFiles()));
+
+                        for(File file1: dir.listFiles()){
+                            System.out.println("!uploadFile next: "+ file1.getName());
+//                            System.out.println("!deleteFile next: "+ file1.getName().split(Character.getName(56))[0]);
+//                            System.out.println("!deleteFile next: "+ file1.getName().split(".")[0]);
+                            System.out.println("!deleteFile next: "+ file1.getName().substring(0, file1.getName().length()-4));
+                            System.out.println("!deleteFile next: "+ file1.getName().substring(0, file1.getName().lastIndexOf(".")));
+
+
+                            if(!file1.getName().equals("0default.jpg")){
+                                if(Integer.parseInt(file1.getName().substring(0, file1.getName().lastIndexOf(".")))>lastNumber){
+                                    System.out.println("!uploadFile latest: "+ file1.getName());
+                                    lastNumber = Integer.parseInt(file1.getName().substring(0, file1.getName().lastIndexOf(".")));
+                                }
+                            }
+
+                        }
+                        name1 = (lastNumber+1) + name.substring(name.lastIndexOf("."), name.length());
+                        System.out.println("!uploadFile finish: "+ name1);
                     }else{
                         name1 = "1" + name.substring(name.lastIndexOf("."), name.length());
                     }
@@ -158,6 +179,17 @@ public class AdminController {
             String rootPath = System.getProperty("catalina.home");
             File dir = new File(rootPath + File.separator + "Resources");
             File f = dir.listFiles()[dir.listFiles().length-1];
+            for(File file: dir.listFiles()){
+                System.out.println("!deleteFile next: "+ file.getName());
+
+                if(!file.getName().equals("0default.jpg")){
+                    if(Integer.parseInt(file.getName().substring(0, file.getName().lastIndexOf(".")))>Integer.parseInt(f.getName().substring(0, f.getName().lastIndexOf(".")))){
+                        System.out.println("!deleteFile latest: "+ file.getName());
+                        f = file;
+                    }
+                }
+
+            }
             if(f.delete()) {
 
                 return "deleted";
@@ -190,8 +222,18 @@ public class AdminController {
             String rootPath = System.getProperty("catalina.home");
             File dir = new File(rootPath + File.separator + "Resources");
             File f = dir.listFiles()[dir.listFiles().length-1];
-            animal.setImagePath("image"+"\\"+f.getName());
-            System.out.println(f.getName());
+            for(File file: dir.listFiles()){
+                System.out.println("!addAnimal next: "+ file.getName());
+                if(!file.getName().equals("0default.jpg")){
+                    if(Integer.parseInt(file.getName().substring(0, file.getName().lastIndexOf(".")))>Integer.parseInt(f.getName().substring(0, f.getName().lastIndexOf(".")))){
+                        System.out.println("!deleteFile latest: "+ file.getName());
+                        f = file;
+                    }
+                }
+
+            }
+            animal.setImagePath("image"+File.separator+f.getName());
+            System.out.println("!addAnimal finish"+f.getName());
             animalService.save(animal);
             return "Animal was added!."+animal.getImagePath();
 //            return "New Animal was added!";
@@ -273,12 +315,14 @@ public class AdminController {
 
 
             String forS = map.get("forSale").toLowerCase().replace(" ", "").replace("\n", "");
+            String isAlive = map.get("isAlive").toLowerCase().replace(" ", "").replace("\n", "");
 
             animal.setName(map.get("name"));
             animal.setAge(Integer.parseInt(map.get("age")));
             animal.setDescription(map.get("description"));
             animal.setAnimalType(at);
             animal.setForSale(forS.equals("true"));
+            animal.setIsAlive(isAlive.equals("true"));
             animal.setPrice(Integer.parseInt(map.get("price")));
 
             System.out.println(map.get("photo"));
@@ -288,7 +332,18 @@ public class AdminController {
             if(map.get("photo").equals("true")) {
                 String rootPath = System.getProperty("catalina.home");
                 File dir = new File(rootPath + File.separator + "Resources");
-                File f = dir.listFiles()[dir.listFiles().length - 1];
+                File f = dir.listFiles()[dir.listFiles().length-1];
+                for(File file: dir.listFiles()){
+                    System.out.println("!addAnimal next: "+ file.getName());
+                    if(!file.getName().equals("0default.jpg")){
+                        if(Integer.parseInt(file.getName().substring(0, file.getName().lastIndexOf(".")))>Integer.parseInt(f.getName().substring(0, f.getName().lastIndexOf(".")))){
+                            System.out.println("!deleteFile latest: "+ file.getName());
+                            f = file;
+                        }
+                    }
+
+                }
+                animal.setImagePath("image"+File.separator+f.getName());
                 animal.setImagePath("image" + "\\" + f.getName());
                 System.out.println(f.getName());
             }

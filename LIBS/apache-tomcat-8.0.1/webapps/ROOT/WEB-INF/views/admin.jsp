@@ -747,6 +747,9 @@
                 $("#showUsers").removeClass("invisible");
                 $("#showOrdersUsers").removeClass("invisible");
             }
+            if(!$("#createZooOrderCont").hasClass("invisible")){
+                $("#createZooOrderCont").addClass("invisible")
+            }
             $.ajax({
                 url: "changeNewZO?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
                 contentType: "application/json",

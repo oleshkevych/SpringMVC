@@ -175,7 +175,9 @@ prefix="sec" %>
                       <label>Orders</label>
                   <ul id="ordersU">
                       <c:forEach var="a" items="${activeUser.userOrders}">
-                          <li class="${a.id}" style="cursor: pointer">animals: ${a.animals}, date: ${a.date}, price: ${a.price}</li>
+                          <li class="${a.id}"
+                              style="cursor: pointer; border: 2px solid gray; border-radius: 10px; padding: 5px;">
+                              animals: ${a.animals}, date: ${a.date}, price: ${a.price}</li>
                           <br>
                       </c:forEach>
                   </ul>
@@ -242,7 +244,7 @@ prefix="sec" %>
                     data: newValue,
                     success: function (res) {
                         $("#nameUChanged").addClass("invisible");
-                        $("#nameU").text(newValue);
+                        $("#nameU").text("name: "+newValue);
                         $("#nameU").removeClass("invisible");
                     },
                     error: function (res) {
@@ -261,7 +263,7 @@ prefix="sec" %>
                     data: newValue,
                     success: function (res) {
                         $("#nameUChanged").addClass("invisible");
-                        $("#nameU").text(newValue);
+                        $("#nameU").text("name: "+newValue);
                         $("#nameU").removeClass("invisible");
                     },
                     error: function (res) {
@@ -287,7 +289,7 @@ prefix="sec" %>
                     data: newValue,
                     success: function (res) {
                         $("#phoneUChanged").addClass("invisible");
-                        $("#phoneU").text(newValue);
+                        $("#phoneU").text("phone number: "+newValue);
                         $("#phoneU").removeClass("invisible");
                     },
                     error: function (res) {
@@ -306,7 +308,7 @@ prefix="sec" %>
                     data: newValue,
                     success: function (res) {
                         $("#phoneUChanged").addClass("invisible");
-                        $("#phoneU").text(newValue);
+                        $("#phoneU").text("phone number: "+newValue);
                         $("#phoneU").removeClass("invisible");
                     },
                     error: function (res) {
@@ -332,7 +334,7 @@ prefix="sec" %>
                     data: newValue,
                     success: function (res) {
                         $("#passwordUChanged").addClass("invisible");
-                        $("#passwordU").text(newValue);
+                        $("#passwordU").text("new password: "+newValue);
                         $("#passwordU").removeClass("invisible");
                     },
                     error: function (res) {
@@ -351,7 +353,7 @@ prefix="sec" %>
                     data: newValue,
                     success: function (res) {
                         $("#passwordUChanged").addClass("invisible");
-                        $("#passwordU").text(newValue);
+                        $("#passwordU").text("new password: "+newValue);
                         $("#passwordU").removeClass("invisible");
                     },
                     error: function (res) {
@@ -377,7 +379,7 @@ prefix="sec" %>
                     data: newValue,
                     success: function (res) {
                         $("#emailUChanged").addClass("invisible");
-                        $("#emailU").text(newValue);
+                        $("#emailU").text("email: "+newValue);
                         $("#emailU").removeClass("invisible");
                     },
                     error: function (res) {
@@ -396,7 +398,7 @@ prefix="sec" %>
                     data: newValue,
                     success: function (res) {
                         $("#emailUChanged").addClass("invisible");
-                        $("#emailU").text(newValue);
+                        $("#emailU").text("email: "+newValue);
                         $("#emailU").removeClass("invisible");
                     },
                     error: function (res) {
@@ -457,7 +459,6 @@ prefix="sec" %>
                         contentType: "application/json",
                         type: "POST",
                         success: function (res) {
-                            alert(res);
                             $("#avaImage").attr("src",res);
 
                         },

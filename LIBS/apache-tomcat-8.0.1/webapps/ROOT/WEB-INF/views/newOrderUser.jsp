@@ -411,6 +411,8 @@
                                     $('#errorMessage p span').text(resultMessage);
                                     $('#errorMessage').removeClass("invisible");
                                     $('#datetimepicker').text("");
+                                    $('#container-time').addClass('invisible');
+                                    $('#confirmButton').addClass('invisible');
                                 }else {
                                     $('#errorMessage').addClass("invisible");
                                 }
@@ -530,6 +532,8 @@
                                     $('#selected-item-time p span').text($('#selLabel-time').text());
                                     $('#errorMessage p span').text(resultMessage);
                                     $('#errorMessage').removeClass("invisible");
+                                    $('#containerWeapon').addClass('invisible');
+                                    $('#container-time').addClass('invisible');
                                 }else{
                                     $('#errorMessage').addClass("invisible");
                                 }
@@ -591,6 +595,10 @@
                                     $('#selected-itemOrderType p span').text("");
                                     $('#errorMessage').removeClass("invisible");
                                     $('#datetimepicker').text("");
+                                    $('#containerOrderType').addClass('invisible');
+                                    $('#container-distance').addClass('invisible');
+                                    $('#containerWeapon').addClass('invisible');
+                                    $('#container-time').addClass('invisible');
 
                                 }else {
                                     $('#errorMessage').addClass("invisible");

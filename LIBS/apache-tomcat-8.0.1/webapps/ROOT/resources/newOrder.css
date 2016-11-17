@@ -199,7 +199,7 @@ body {
 }
 
 #container{
-    height: 650px;
+    min-height: 650px;
 }
 
 #container>.invisible{
@@ -438,4 +438,7 @@ body {
     padding: 10px;
     border: 2px solid;
     border-radius: 30px;
+}
+.container>.invisible{
+    display: none;
 }

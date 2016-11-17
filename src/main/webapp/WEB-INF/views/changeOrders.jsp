@@ -232,6 +232,25 @@
                         </ul>
                     </div>
                 </div>
+<%--isAlive--%>
+                <div class="container " id="container-isAlive">
+                    <div class="selected-item" id="selected-item-isAlive">
+                        <p>You Selected sale Status : <span>${animalSelected.forSale}</span></p>
+                    </div>
+
+                    <div class="dropdown" id="isAlive">
+                        <span class="selLabel" id="selLabel-isAlive">${animalSelected.forSale}</span>
+                        <input type="hidden" name="cd-dropdown">
+                        <ul class="dropdown-list" id="dropdown-list-isAlive">
+                            <li data-value="1">
+                                <span>True</span>
+                            </li>
+                            <li data-value="2">
+                                <span>False</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
 
                 <button type="button" class="btn btn-primary container " id="confirmButton">Accept</button>
@@ -450,6 +469,16 @@
         $('#confirmButton').removeClass('invisible');
     });
 
+    $("#selLabel-isAlive").click(function () {
+        $('#isAlive').toggleClass('active');
+    });
+    $("#dropdown-list-isAlive li").click(function () {
+        $('#selLabel-isAlive').text($(this).text());
+        $('#isAlive').removeClass('active');
+        $('#selected-item-isAlive p span').text($('#selLabel-isAlive').text());
+        $('#confirmButton').removeClass('invisible');
+    });
+
     $('#confirmButton').click(function (event) {
         event.preventDefault();
 
@@ -464,6 +493,7 @@
         var imageA = $("#formUpload").hasClass("invisible");
         var idA = $("#idAnimal").val();
         var photoAdded = "false";
+        var isAliveA =  ($('#selected-item-isAlive p span').text());
         if (imageA) {
             photoAdded = "true";
         }
@@ -490,7 +520,8 @@
                                 price: priceA,
                                 forSale: forSaleA,
                                 animalType: typeA,
-                                photo: photoAdded
+                                photo: photoAdded,
+                                isAlive: isAliveA
                             };
                             $.ajax({
                                 url: "changeTheAnimal?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),

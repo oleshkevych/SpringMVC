@@ -208,7 +208,7 @@ prefix="sec" %>
                         </div>
                         <br>
                         <div class="dataO">
-                            <p>Age: ${zo.age}; Animal Type: ${zo.animalType}; Price: ${zo.price}; Is present in the Zoo: ${zo.alive}</p>
+                            <p>Age: ${zo.age}; Animal Type: ${zo.animalType}; Price: ${zo.price}; Is present in the Zoo: ${zo.isAlive}</p>
                         </div>
                     </div>
                     </li>

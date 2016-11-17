@@ -57,7 +57,19 @@ public class ProfileController {
             System.out.println("!dir"+dir.getName());
             File f = dir.listFiles()[dir.listFiles().length-1];
             System.out.println("!fileList"+ Arrays.toString(dir.listFiles()));
-            System.out.println("!file"+ f.getName());
+            System.out.println("!fileList start name:"+ f.getName());
+
+            for(File file: dir.listFiles()){
+                System.out.println("!fileList next: "+ file.getName());
+                if(!file.getName().equals("0default.jpg")){
+                    if(Integer.parseInt(file.getName().substring(0, file.getName().lastIndexOf(".")))>Integer.parseInt(f.getName().substring(0, f.getName().lastIndexOf(".")))){
+                        System.out.println("!fileList latest: "+ file.getName());
+                        f = file;
+                    }
+                }
+
+            }
+            System.out.println("!file finish"+ f.getName());
             if(!activeUser.getUser().getPathImage().equals("image"+File.separator+"0default.jpg")){
                 File fOld = new File(dir.getPath()+File.separator+activeUser.getUser().getPathImage().substring(6));
                 System.out.println("if delete");
