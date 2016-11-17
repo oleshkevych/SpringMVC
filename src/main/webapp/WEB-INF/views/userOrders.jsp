@@ -416,7 +416,7 @@ prefix="sec" %>
             contentType: "application/json",
             type: "POST",
             success: function () {
-                window.location.assign("/login");
+                window.location.assign("login");
             }
         })
     });
@@ -431,7 +431,7 @@ prefix="sec" %>
                 type: "POST",
                 data: orderId,
                 success: function (res) {
-                    window.location.assign("/addOrder");
+                    window.location.assign("addOrder");
                 },
                 error: function (res) {
                     alert("Error:" +res);

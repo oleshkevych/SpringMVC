@@ -686,7 +686,7 @@
 //                                                contentType: "application/json",
 //                                                type: "GET"
 //                                            });
-                                            window.location.assign("/admin");
+                                            window.location.assign("admin");
                                         },
                                         error: function (res) {
                                             alert(res);
@@ -818,7 +818,7 @@
                 type: "POST",
                 data: animalId,
                 success: function (res) {
-                    window.location.assign("/changeAnimal");
+                    window.location.assign("changeAnimal");
                 },
                 error: function (res) {
                     alert("Error:" + res);
@@ -834,7 +834,7 @@
                 type: "POST",
                 data: id,
                 success: function (res) {
-                    window.location.assign("/admin");
+                    window.location.assign("admin");
                 },
                 error: function (res) {
                     alert("Error:" + res);
@@ -886,7 +886,7 @@
                     $('#confirmButtonO').prop('disabled', false);
                     $('#confirmButtonO').removeClass("btn-default");
                     $('#confirmButtonO').addClass("btn-primary");
-                    window.location.assign("/admin");
+                    window.location.assign("admin");
                 },
                 error: function (res) {
                     alert(res);
@@ -903,7 +903,7 @@
                 type: "POST",
                 data: id,
                 success: function (res) {
-                    window.location.assign("/admin");
+                    window.location.assign("admin");
                 },
                 error: function (res) {
                     alert("Error:" + res);
@@ -920,7 +920,7 @@
                 type: "POST",
                 data: id,
                 success: function (res) {
-                    window.location.assign("/admin");
+                    window.location.assign("admin");
                 },
                 error: function (res) {
                     alert("Error:" + res);
@@ -936,7 +936,7 @@
                 type: "POST",
                 data: id,
                 success: function (res) {
-                    window.location.assign("/admin");
+                    window.location.assign("admin");
                 },
                 error: function (res) {
                     alert("Error:" + res);
@@ -953,7 +953,7 @@
                 type: "POST",
                 data: id,
                 success: function (res) {
-                    window.location.assign("/changeAnimal");
+                    window.location.assign("changeAnimal");
                 },
                 error: function (res) {
                     alert("Error:" + res);

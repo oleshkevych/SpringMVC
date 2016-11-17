@@ -155,7 +155,7 @@
 //                            }
 //                        })
 
-                window.location.assign("/loginKiller");
+                window.location.assign("loginKiller");
 
             }
         }

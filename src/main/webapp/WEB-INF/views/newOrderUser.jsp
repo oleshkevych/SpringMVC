@@ -457,7 +457,7 @@
                                         type: "POST",
                                         success: function (res) {
                                             console.log(res);
-                                            window.location.assign("/addOrder");
+                                            window.location.assign("addOrder");
                                         },
                                         error: function (res) {
                                             alert(res);
@@ -671,7 +671,7 @@
                                             if(res == "redirect"){
                                                 $("#logoutForm").serialize();
                                             }else {
-                                                window.location.assign("/addOrder");
+                                                window.location.assign("addOrder");
                                             }
                                         },
                                         error: function (res) {

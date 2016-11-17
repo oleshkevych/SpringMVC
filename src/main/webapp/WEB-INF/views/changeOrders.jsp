@@ -235,7 +235,7 @@
 <%--isAlive--%>
                 <div class="container " id="container-isAlive">
                     <div class="selected-item" id="selected-item-isAlive">
-                        <p>You Selected sale Status : <span>${animalSelected.forSale}</span></p>
+                        <p>You Selected Present Status : <span>${animalSelected.forSale}</span></p>
                     </div>
 
                     <div class="dropdown" id="isAlive">
@@ -539,7 +539,7 @@
 //                                                contentType: "application/json",
 //                                                type: "GET"
 //                                            });
-                                    window.location.assign("/admin");
+                                    window.location.assign("admin");
                                 },
                                 error: function (res) {
                                     alert(res);
@@ -607,7 +607,7 @@
                 $('#confirmButtonO').prop('disabled', false);
                 $('#confirmButtonO').removeClass("btn-default");
                 $('#confirmButtonO').addClass("btn-primary");
-                window.location.assign("/admin");
+                window.location.assign("admin");
             },
             error: function (res) {
                 alert(res);

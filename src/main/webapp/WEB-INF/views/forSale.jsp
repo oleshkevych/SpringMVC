@@ -120,7 +120,7 @@ prefix="sec" %>
         <div id="animalGallery">
 
             <ul class="nav nav-pills">
-                <li role="presentation" class="imgList"><img class="imgList" style="width: 350px; height: 350px"
+              <!--   <li role="presentation" class="imgList"><img class="imgList" style="width: 350px; height: 350px"
                                                              src="resources/images/panda.png" alt="panda">
                     <div class="description">Lorem ipsum dolor sit amet, nec dolor vestibulum turpis quis, risus
                         porttitor velit venenatis dictum, ac nibh, consectetuer ac ornare dignissim nullam, nullam
@@ -190,7 +190,7 @@ prefix="sec" %>
                         Aliquam placerat dictum sit justo, amet suspendisse magna libero eu optio mi. Explicabo tempor
                         non nunc egestas, lacus risus, nunc dictumst quisque pharetra, at litora vulputate magna a urna
                         ullamcorper.
-                    </div></li>
+                    </div></li> -->
                 <c:forEach var="zo" items="${animals }">
                     <li>
                     <div class="descriptionPanel">
