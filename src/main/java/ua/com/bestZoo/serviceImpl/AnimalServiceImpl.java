@@ -6,7 +6,6 @@ import ua.com.bestZoo.entity.Animal;
 import ua.com.bestZoo.entity.AnimalType;
 import ua.com.bestZoo.entity.Zoo;
 import ua.com.bestZoo.repository.AnimalRepository;
-import ua.com.bestZoo.repository.ZooRepository;
 import ua.com.bestZoo.service.AnimalService;
 import ua.com.bestZoo.service.ZooService;
 
@@ -48,7 +47,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     public List<Animal> findAlive() {
-        return findAll().stream().filter(Animal::isAlive).collect(Collectors.toList());
+        return findAll().stream().filter(Animal::isIsAlive).collect(Collectors.toList());
     }
 
     public List<Animal> findKilled() {

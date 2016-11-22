@@ -36,19 +36,6 @@ public class ProfileController {
 
     @RequestMapping(value={"/myOrders"}, method= RequestMethod.GET)
     public String myOrder(Model model) {
-
-        System.out.println("!myOrders"+activeUser.getUser().userName());
-
-        if(activeUser.getUser().userName()!=null) {
-            userService.save(activeUser.getUser());
-        }
-        System.out.println("!myOrders"+activeUser.getUser().userName());
-
-
-
-        System.out.println("!myOrders"+activeUser.getUser().userName());
-
-
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             activeUser.setUser(userService.fetchUser(user.getId()));
@@ -58,8 +45,6 @@ public class ProfileController {
         }catch (NullPointerException e){
             model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
         }
-        System.out.println("!myOrders"+activeUser.getUser().userName());
-
         return "userOrders";
     }
     @RequestMapping(value={"/uploadImage"}, method= RequestMethod.POST)
@@ -72,7 +57,19 @@ public class ProfileController {
             System.out.println("!dir"+dir.getName());
             File f = dir.listFiles()[dir.listFiles().length-1];
             System.out.println("!fileList"+ Arrays.toString(dir.listFiles()));
-            System.out.println("!file"+ f.getName());
+            System.out.println("!fileList start name:"+ f.getName());
+
+            for(File file: dir.listFiles()){
+                System.out.println("!fileList next: "+ file.getName());
+                if(!file.getName().equals("0default.jpg")){
+                    if(Integer.parseInt(file.getName().substring(0, file.getName().lastIndexOf(".")))>Integer.parseInt(f.getName().substring(0, f.getName().lastIndexOf(".")))){
+                        System.out.println("!fileList latest: "+ file.getName());
+                        f = file;
+                    }
+                }
+
+            }
+            System.out.println("!file finish"+ f.getName());
             if(!activeUser.getUser().getPathImage().equals("image"+File.separator+"0default.jpg")){
                 File fOld = new File(dir.getPath()+File.separator+activeUser.getUser().getPathImage().substring(6));
                 System.out.println("if delete");
@@ -81,6 +78,8 @@ public class ProfileController {
             System.out.println("!"+activeUser.getUser().getPathImage());
             activeUser.getUser().setPathImage("image"+File.separator+f.getName());
             System.out.println("!"+activeUser.getUser().getPathImage());
+
+            userService.save(activeUser.getUser());
             return activeUser.getUser().getPathImage();
 
         } catch (Exception e) {
@@ -92,6 +91,7 @@ public class ProfileController {
     String profileNameHandler(@RequestBody String string) {
         try {
             activeUser.getUser().setUserName(string);
+            userService.save(activeUser.getUser());
             return "You have the new name";
 
         } catch (Exception e) {
@@ -103,6 +103,7 @@ public class ProfileController {
     String profilePhoneHandler(@RequestBody String string) {
         try {
             activeUser.getUser().setPhoneNumber(string);
+            userService.save(activeUser.getUser());
             return "You have the new phone";
 
         } catch (Exception e) {
@@ -126,6 +127,7 @@ public class ProfileController {
     String profileEmailHandler(@RequestBody String string) {
         try {
             activeUser.getUser().setEmail(string);
+            userService.save(activeUser.getUser());
             return "You have the new email";
 
         } catch (Exception e) {

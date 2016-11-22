@@ -19,7 +19,7 @@ public class Animal {
     private String description;
     private int age;
     private int price;
-    private boolean alive;
+    private boolean isAlive;
     private String imagePath;
     private boolean forSale;
 
@@ -46,7 +46,7 @@ public class Animal {
         this.animalType = animalType;
         this.forSale = forSale;
         this.imagePath = imagePath;
-        alive = true;
+        isAlive = true;
     }
 
     public List<UserOrder> getUserOrders() {
@@ -65,16 +65,16 @@ public class Animal {
         this.zoo = zoo;
     }
 
-    public boolean isAlive() {
-        return alive;
+    public boolean isIsAlive() {
+        return isAlive;
     }
 
     public boolean isKilled() {
-        return !alive;
+        return !isAlive;
     }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    public void setIsAlive(boolean alive) {
+        this.isAlive = alive;
     }
 
     public int getId() {

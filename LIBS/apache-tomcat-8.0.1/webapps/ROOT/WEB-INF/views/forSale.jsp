@@ -25,11 +25,11 @@ prefix="sec" %>
 <script src="resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <body>
 <c:set var="user" value="${userRoleText}"/>
-${user}
 <c:set var="HUNTER" value="<%=UserRole.HUNTER.getTexts()%>"/>
 <c:choose>
 <c:when test="${(user eq HUNTER)}">
 <div id="pageH">
+
     <div id="headerH">
         <div id="logo">
             <a href="h"><img src="resources/images/logoH.jpg" alt="The Analog Specialists"/></a>
@@ -66,39 +66,61 @@ ${user}
                                 </sec:authorize>
 
                                 <sec:authorize access="isAuthenticated()">
-                                    <li role="presentation" class="footerList"><a href="addOrder">Make new order</a>
-                                    </li>
-                                    <li role="presentation" class="footerList"><a href="myOrders">My orders</a></li>
+                                    <sec:authorize access="hasRole('ROLE_USER')" >
+                                        <li role="presentation" class="footerList"><a href="addOrder">New Order</a></li>
+                                        <li role="presentation" class="footerList"><a href="myOrders">My Profile</a></li>
+                                    </sec:authorize>
+                                    <sec:authorize access="hasRole('ROLE_ADMIN')" >
+                                        <li role="presentation" class="footerList" style="margin: auto;"><a href="admin">Admin</a>
+                                        </li>
+                                    </sec:authorize>
                                     <li role="presentation" class="footerList">
-                                        <sf:form action="logout" method="post">
+                                        <sf:form action="logout" method="post" id="logoutForm">
                                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                             <button class="formRegistButton footerList">Log Out</button>
+
                                         </sf:form>
+                                        <script type="text/javascript">
+                                        $("#logoutForm").click(function () {
+                                            $.ajax({
+                                                url: "logoutS?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                                                contentType: "application/json",
+                                                type: "POST",
+                                                success: function (res) {
+                                                    console.log(res);
+                                                }
+                                            })
+                                        });
+                                    </script>
                                     </li>
                                 </sec:authorize>
+
 
                             </ul>
 
                         </div>
                         <div class="col-lg-6" id="searchBar">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search for...">
+                                <input type="text" class="form-control" placeholder="Search for..." id="searchInput">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">Go!</button>
+                                    <button class="btn btn-default" type="button" id="searchButton">Go!</button>
+                                    <script type="text/javascript" >
+                                         $("#searchButton").click(function(){
+                                             $("#searchInput").val("I don't want to do anything for you!");
+                                         });
+                                    </script>
                                   </span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-
-
     <div id="container">
 
         <div id="animalGallery">
 
             <ul class="nav nav-pills">
-                <li role="presentation" class="imgList"><img class="imgList"
+                <li role="presentation" class="imgList"><img class="imgList" style="width: 350px; height: 350px"
                                                              src="resources/images/panda.png" alt="panda">
                     <div class="description">Lorem ipsum dolor sit amet, nec dolor vestibulum turpis quis, risus
                         porttitor velit venenatis dictum, ac nibh, consectetuer ac ornare dignissim nullam, nullam
@@ -173,26 +195,20 @@ ${user}
                     <li>
                     <div class="descriptionPanel">
                         <div class="dataO">
-                            <img src="${zo.imagePath}" alt="Photo"/>
+                            <p>Name: ${zo.name}</p>
+                            <p>This animal is fore sale: ${zo.forSale}</p>
                         </div>
+                        <br>
                         <div class="dataO">
-                            <p> ${zo.name}</p>
+                            <img src="${zo.imagePath}" style="width: 350px; height: 350px" alt="Photo"/>
                         </div>
-                        <div class="dataO">
+                        <br>
+                        <div class="dataO" style="float: none">
                             <p> ${zo.description}</p>
                         </div>
+                        <br>
                         <div class="dataO">
-                            <p> ${zo.age}</p>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.animalType}</p>
-                        </div>
-                        <div class="dataO">
-                            <p> ${zo.price}</p>
-                        </div>
-
-                        <div class="dataO">
-                            <p>Alive: ${zo.alive}</p>
+                            <p>Age: ${zo.age}; Animal Type: ${zo.animalType}; Price: ${zo.price}; Is present in the Zoo: ${zo.isAlive}</p>
                         </div>
                     </div>
                     </li>

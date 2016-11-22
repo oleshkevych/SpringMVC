@@ -34,42 +34,83 @@
 <c:set var="cheep" value="<%=AnimalType.CHEEP%>"/>
 <c:set var="average" value="<%=AnimalType.AVERAGE%>"/>
 <c:set var="expansive" value="<%=AnimalType.EXPANSIVE%>"/>
-<div id="page">
-    <div id="header">
-        <div id="logo">
-            <a href="h"><img src="resources/images/logo.jpg" alt="The Analog Specialists"/></a>
-        </div>
-        <div class="navbarLists">
-            <div>
-                <ul class="nav nav-pills">
-                    <li role="presentation" class="footerList"><a href="h">Home</a></li>
-                    <li role="presentation" class="footerList"><a href="forSale">For Sale</a></li>
-                    <li role="presentation" class="footerList"><a href="textFormForAllQuestions">Help us</a>
-                    </li>
-                    <li role="presentation" class="footerList"><a href="addOrder">Make new order</a>
-                    </li>
-                    <li role="presentation" class="footerList active"><a href="admin">My page</a></li>
-                    <li role="presentation" class="footerList">
-                        <sf:form action="logout" method="post">
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                            <button class="formRegistButton footerList">Log Out</button>
-                        </sf:form>
-                    </li>
+<div id="pageH">
+    <script type="text/javascript">
+        $("#logoutForm").click(function () {
+            $.ajax({
+                url: "logoutS?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                contentType: "application/json",
+                type: "POST",
+                success: function (res) {
+                    console.log(res);
+                }
+            })
+        });
+    </script>
 
-                </ul>
+            <div id="page">
+                <div id="header">
+                    <div id="logo">
+                        <a href="h"><img src="resources/images/logo.jpg" alt="The Analog Specialists"/></a>
+                    </div>
+                    <div class="navbarLists">
+                        <div>
+                            <ul class="nav nav-pills">
+                                <li role="presentation" class="footerList"><a href="h">Home</a></li>
+                                <li role="presentation" class="footerList"><a href="forSale">For Sale</a></li>
+                                <li role="presentation" class="footerList"><a href="textFormForAllQuestions">Help us</a>
+                                </li>
+                                <sec:authorize access="!isAuthenticated()">
+                                    <li role="presentation" class="footerList"><a
+                                            href="textFormForAllQuestions">About</a></li>
+                                    <li role="presentation" class="footerList"><a
+                                            href="textFormForAllQuestions">Contact</a></li>
+                                    <li role="presentation" class="footerList">
+                                        <sf:form action="loginPage" method="post">
+                                            <button class="formRegistButton footerList">Log In</button>
+                                        </sf:form></li>
+                                    <li role="presentation" class="footerList">
+                                        <sf:form action="registration" method="post">
+                                            <button class="formRegistButton footerList">Registration</button>
+                                        </sf:form></li>
+                                </sec:authorize>
 
-            </div>
-            <div class="col-lg-6" id="searchBar">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">Go!</button>
+                                <sec:authorize access="isAuthenticated()">
+                                    <sec:authorize access="hasRole('ROLE_USER')" >
+                                        <li role="presentation" class="footerList"><a href="addOrder">New Order</a></li>
+                                        <li role="presentation" class="footerList"><a href="myOrders">My Profile</a></li>
+                                    </sec:authorize>
+                                    <sec:authorize access="hasRole('ROLE_ADMIN')" >
+                                        <li role="presentation" class="footerList active" style="margin: auto;"><a href="admin">Admin</a>
+                                        </li>
+                                    </sec:authorize>
+                                    <li role="presentation" class="footerList">
+                                        <sf:form action="logout" method="post" id="logoutForm">
+                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                            <button class="formRegistButton footerList">Log Out</button>
+                                        </sf:form>
+                                    </li>
+                                </sec:authorize>
+
+                            </ul>
+
+                        </div>
+                        <div class="col-lg-6" id="searchBar">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search for..." id="searchInput">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" id="searchButton">Go!</button>
+                                    <script type="text/javascript" >
+                                         $("#searchButton").click(function(){
+                                             $("#searchInput").val("I don't want to do anything for you!");
+                                         });
+                                    </script>
                                   </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div style="float: right;">
+                <div style="float: right;">
     <label>Now you have ${cages} cages free.</label>
     <label style="margin-top: 20px; display: inherit;">Now you have ${bank} $ free.</label>
 </div>
@@ -705,6 +746,9 @@
                 $("#showAddAnimal").removeClass("invisible");
                 $("#showUsers").removeClass("invisible");
                 $("#showOrdersUsers").removeClass("invisible");
+            }
+            if(!$("#createZooOrderCont").hasClass("invisible")){
+                $("#createZooOrderCont").addClass("invisible")
             }
             $.ajax({
                 url: "changeNewZO?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),

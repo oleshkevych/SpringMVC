@@ -1,8 +1,9 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-pageEncoding="ISO-8859-1" %>
+         pageEncoding="ISO-8859-1" %>
 
 <%@ taglib uri="http://www.springframework.org/security/tags"
-prefix="sec" %>
+           prefix="sec" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -22,14 +23,12 @@ prefix="sec" %>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <body>
-<input type="hidden" name="csrf_name" value="${_csrf.parameterName}" />
-<input type="hidden" name="csrf_value" value="${_csrf.token}" />
+<input type="hidden" name="csrf_name" value="${_csrf.parameterName}"/>
+<input type="hidden" name="csrf_value" value="${_csrf.token}"/>
 <div id="page">
     <div id="header">
         <div id="logo">
-            <a href="h">
-                <img src="resources/images/logo.jpg" alt="The Analog Specialists"/>
-            </a>
+            <a href="h"><img src="resources/images/logo.jpg" alt="The Analog Specialists"/></a>
         </div>
         <div class="navbarLists">
             <div>
@@ -43,9 +42,9 @@ prefix="sec" %>
                                 href="textFormForAllQuestions">About</a></li>
                         <li role="presentation" class="footerList"><a
                                 href="textFormForAllQuestions">Contact</a></li>
-                        <li role="presentation" class="active footerList">
+                        <li role="presentation" class="footerList active">
                             <sf:form action="loginPage" method="post">
-                                <button class="formRegistButton footerList">Log In</button>
+                                <button class="formRegistButton footerList active">Log In</button>
                             </sf:form></li>
                         <li role="presentation" class="footerList">
                             <sf:form action="registration" method="post">
@@ -54,41 +53,56 @@ prefix="sec" %>
                     </sec:authorize>
 
                     <sec:authorize access="isAuthenticated()">
-                        <li role="presentation" class="footerList"><a href="addOrder">Make new order</a>
-                        </li>
-                        <li role="presentation" class="footerList"><a href="myOrders">My orders</a></li>
+                        <sec:authorize access="hasRole('ROLE_USER')">
+                            <li role="presentation" class="footerList"><a href="addOrder">Make new order</a>
+                            </li>
+                            <li role="presentation" class="footerList"><a href="myOrders">My orders</a></li>
+                        </sec:authorize>
                         <li role="presentation" class="footerList">
-                            <sf:form action="logout" method="post">
+                            <sf:form action="logout" method="post" id="logoutForm">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <button class="formRegistButton footerList">Log Out</button>
                             </sf:form>
                         </li>
                     </sec:authorize>
+                    <sec:authorize access="hasRole('ROLE_ADMIN')">
+                        <li role="presentation" class="footerList" style="margin: auto;"><a href="admin">Admin</a>
+                        </li>
+                    </sec:authorize>
 
                 </ul>
 
-            </div>
-            <div class="col-lg-6" id="searchBar">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
-      </span>
+                <div class="col-lg-6" id="searchBar">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for..." id="searchInput">
+                        <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" id="searchButton">Go!</button>
+                                    <script type="text/javascript">
+                                         $("#searchButton").click(function () {
+                                             $("#searchInput").val("I don't want to do anything for you!");
+                                         });
+                                    </script>
+                                  </span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class = "container">
+    <div class="container">
         <div class="wrapper">
             <sf:form action="loginprocesing" method="post" name="Login_Form" class="form-signin">
                 <h3 class="form-signin-heading">Welcome Back! Please Sign In</h3>
-                <hr class="colorgraph"><br>
+                <hr class="colorgraph">
+                <br>
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
-                <input id="userField" type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
-                <input id="passwordField" type="password" class="form-control" name="password" placeholder="Password" required=""/>
+                <input id="userField" type="text" class="form-control" name="username" placeholder="Username"
+                       required="" autofocus=""/>
+                <input id="passwordField" type="password" class="form-control" name="password" placeholder="Password"
+                       required=""/>
 
-                <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>
+                <button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit">Login
+                </button>
             </sf:form>
         </div>
     </div>
@@ -127,9 +141,9 @@ prefix="sec" %>
 <script type="text/javascript">
 
 
-            $("#passwordField").keydown(function () {
-                if($("#userField").val().toLowerCase() == "hunter") {
-                    if ($("#passwordField").val() == "1111") {
+    $("#passwordField").keydown(function () {
+        if ($("#userField").val().toLowerCase() == "hunter") {
+            if ($("#passwordField").val() == "1111") {
 //                        console.log("1111jhfvbhwecb");
 //
 //                        $.ajax({
@@ -141,11 +155,11 @@ prefix="sec" %>
 //                            }
 //                        })
 
-                        window.location.assign("/loginKiller");
+                window.location.assign("/loginKiller");
 
-                    }
-                }
-            })
+            }
+        }
+    })
 </script>
 </body>
 </html>

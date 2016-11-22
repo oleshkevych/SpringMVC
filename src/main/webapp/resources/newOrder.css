@@ -199,7 +199,7 @@ body {
 }
 
 #container{
-    height: 650px;
+    min-height: 650px;
 }
 
 #container>.invisible{
@@ -430,3 +430,15 @@ body {
     border-radius: 30px;
 }
 
+#tooltip{
+    display: block;
+    width: 350px;
+    background: #aaa;
+    color: #000000;
+    padding: 10px;
+    border: 2px solid;
+    border-radius: 30px;
+}
+.container>.invisible{
+    display: none;
+}

@@ -193,6 +193,13 @@ public class OrdersController {
     public @ResponseBody
     String validatingDate(@RequestBody Map<String, String> map) {
         try {
+            String orderTypeS = map.get("orderType").toUpperCase().replace(" ", "").replace("\n", "");
+            OrderType ot = OrderType.MEETING;
+            switch (orderTypeS) {
+                case "HUNTING":
+                    ot = OrderType.HUNTING;
+                    break;
+            }
             String[] a = map.get("date").split(" ");
             if(a[1].length()<5){
                 String[] a1 = a[1].split(":");
@@ -233,6 +240,9 @@ public class OrdersController {
             String message = "";
             String messageDeath = "";
             String bMessage = "not";
+            long tLast = 0;
+            LocalDateTime ldt = null;
+            boolean b = false;
             for (UserOrder uo : animal.getUserOrders()) {
                 message += " from " + uo.getDate().toString() + " for " + uo.getTimeOfMeeting() + " minutes";
                 ZonedDateTime zdt = uo.getDate().atZone(ZoneId.of("Europe/Kiev"));
@@ -243,21 +253,36 @@ public class OrdersController {
                 } else {
                     timeFinish = timeStart + 4 * 60000;
                 }
-                if((uo.getOrderType()==OrderType.HUNTING && (timeStart<timeNewFinish))){
+                if ((uo.getOrderType() == OrderType.HUNTING && (timeStart < timeNewFinish))) {
                     messageDeath = " Sorry this animal will unavailable after " + uo.getDate().toString();
                     bMessage = "yes";
                 }
                 if ((timeStart < timeNewStart && timeFinish > timeNewStart) ||
                         (timeStart < timeNewFinish && timeFinish > timeNewFinish) ||
-                        (timeStart > timeNewStart && timeFinish < timeNewFinish)){
+                        (timeStart > timeNewStart && timeFinish < timeNewFinish)) {
                     bMessage = "yes";
                 }
+                if (ot == OrderType.HUNTING && uo.getOrderType() == OrderType.HUNTING) {
+                    messageDeath = " Sorry, we already have an order to kill this animal on " + uo.getDate().toString();
+                    bMessage = "yes";
 
+                    b = true;
+                }
+                if (ot == OrderType.HUNTING && timeFinish > timeNewStart) {
+                    if(timeFinish>tLast){
+                        tLast = timeFinish;
+                        ldt = uo.getDate();
+                    }
+
+                    bMessage = "yes";
+                }
             }
-
+            if(tLast>0&&!b){
+                messageDeath = " Sorry, we already have the orders on this animal till " + ldt.toString();
+            }
             return bMessage + "!!!" + message + messageDeath;
         }catch(Exception e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
 
             return e.getMessage();
         }

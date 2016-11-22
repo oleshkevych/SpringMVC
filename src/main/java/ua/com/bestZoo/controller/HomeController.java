@@ -82,7 +82,7 @@ public class HomeController {
         }catch (NullPointerException e){
             model.addAttribute("userRoleText", UserRole.NOTENOUGHSMART.getTexts());
         }
-        model.addAttribute("animals", animalService.findForSale());
+        model.addAttribute("animals", animalService.findAlive());
 		return "forSale";
 	}
 	@RequestMapping(value="/textFormForAllQuestions", method=RequestMethod.GET)
@@ -151,13 +151,26 @@ public class HomeController {
             activeUser.setRole(Role.ROLE_ADMIN);
         }
         System.out.println(activeUser.getUserRole());
-        return "home";
+        return "redirect:/h";
     }
+    @RequestMapping(value="/loginprocesing", method=RequestMethod.GET)
+    public String loginprocesing() {
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            System.out.println("1: "+user.getUserRole());
 
-//    @RequestMapping(value={"/killerLoggedIn"}, method=RequestMethod.POST)
-//    public String loggedInK(Principal principal) {
-//        User user = userService.fetchUser(Integer.parseInt(principal.getName()));
-//        user.setUserRole(UserRole.HUNTER);
-//        return "home";
-//    }
+            if ((user.getUserRole() != UserRole.HUNTER) && (activeUser.getUserRole() == UserRole.HUNTER)) {
+                user.setUserRole(UserRole.HUNTER);
+            }
+            activeUser.setUser(user);
+            activeUser.setUserRole(user.getUserRole());
+            System.out.println("2: "+user.getUserRole());
+            activeUser.setRole(Role.ROLE_USER);
+            System.out.println("!myOrders"+activeUser.getUser().userName());
+        }catch (ClassCastException e){
+            activeUser.setRole(Role.ROLE_ADMIN);
+        }
+        System.out.println(activeUser.getUserRole());
+        return "redirect:/h";
+    }
 }

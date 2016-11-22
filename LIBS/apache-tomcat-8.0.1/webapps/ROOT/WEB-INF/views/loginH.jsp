@@ -44,7 +44,7 @@
                                 href="textFormForAllQuestions">Contact</a></li>
                         <li role="presentation" class="active footerList">
                             <sf:form action="loginPage" method="post">
-                                <button class="formRegistButton footerList">Log In</button>
+                                <button class="formRegistButton footerList active">Log In</button>
                             </sf:form></li>
                         <li role="presentation" class="footerList">
                             <sf:form action="registration" method="post">
@@ -69,10 +69,15 @@
             </div>
             <div class="col-lg-6" id="searchBar">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
+                    <input type="text" class="form-control" placeholder="Search for..." id="searchInput">
                     <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
-      </span>
+                                    <button class="btn btn-default" type="button" id="searchButton">Go!</button>
+                                    <script type="text/javascript" >
+                                         $("#searchButton").click(function(){
+                                             $("#searchInput").val("I don't want to do anything for you!");
+                                         });
+                                    </script>
+                                  </span>
                 </div>
             </div>
         </div>

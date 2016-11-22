@@ -1,4 +1,5 @@
 <%@ page import="ua.com.bestZoo.entity.AnimalType" %>
+<%@ page import="ua.com.bestZoo.entity.UserRole" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
          pageEncoding="ISO-8859-1" %>
 
@@ -35,41 +36,81 @@
 <c:set var="cheep" value="<%=AnimalType.CHEEP%>"/>
 <c:set var="average" value="<%=AnimalType.AVERAGE%>"/>
 <c:set var="expansive" value="<%=AnimalType.EXPANSIVE%>"/>
-<div id="page">
-    <div id="header">
-        <div id="logo">
-            <a href="h"><img src="resources/images/logo.jpg" alt="The Analog Specialists"/></a>
-        </div>
-        <div class="navbarLists">
-            <div>
-                <ul class="nav nav-pills">
-                    <li role="presentation" class="footerList"><a href="h">Home</a></li>
-                    <li role="presentation" class="footerList"><a href="forSale">For Sale</a></li>
-                    <li role="presentation" class="footerList"><a href="textFormForAllQuestions">Help us</a>
-                    </li>
-                    <li role="presentation" class="footerList"><a href="addOrder">Make new order</a>
-                    </li>
-                    <li role="presentation" class="footerList active"><a href="admin">My page</a></li>
-                    <li role="presentation" class="footerList">
-                        <sf:form action="logout" method="post">
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                            <button class="formRegistButton footerList">Log Out</button>
-                        </sf:form>
-                    </li>
 
-                </ul>
+            <div id="page">
+                <div id="header">
+                    <div id="logo">
+                        <a href="h"><img src="resources/images/logo.jpg" alt="The Analog Specialists"/></a>
+                    </div>
+                    <div class="navbarLists">
+                        <div>
+                            <ul class="nav nav-pills">
+                                <li role="presentation" class="footerList"><a href="h">Home</a></li>
+                                <li role="presentation" class="footerList"><a href="forSale">For Sale</a></li>
+                                <li role="presentation" class="footerList"><a href="textFormForAllQuestions">Help us</a>
+                                </li>
+                                <sec:authorize access="!isAuthenticated()">
+                                    <li role="presentation" class="footerList"><a
+                                            href="textFormForAllQuestions">About</a></li>
+                                    <li role="presentation" class="footerList"><a
+                                            href="textFormForAllQuestions">Contact</a></li>
+                                    <li role="presentation" class="footerList">
+                                        <sf:form action="loginPage" method="post">
+                                            <button class="formRegistButton footerList">Log In</button>
+                                        </sf:form></li>
+                                    <li role="presentation" class="footerList">
+                                        <sf:form action="registration" method="post">
+                                            <button class="formRegistButton footerList">Registration</button>
+                                        </sf:form></li>
+                                </sec:authorize>
 
-            </div>
-            <div class="col-lg-6" id="searchBar">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">Go!</button>
+                                <sec:authorize access="isAuthenticated()">
+                                    <sec:authorize access="hasRole('ROLE_USER')" >
+                                        <li role="presentation" class="footerList"><a href="addOrder">New Order</a></li>
+                                        <li role="presentation" class="footerList"><a href="myOrders">My Profile</a></li>
+                                    </sec:authorize>
+                                    <sec:authorize access="hasRole('ROLE_ADMIN')" >
+                                        <li role="presentation" class="footerList" style="margin: auto;"><a href="admin">Admin</a>
+                                        </li>
+                                    </sec:authorize>
+                                    <li role="presentation" class="footerList">
+                                        <sf:form action="logout" method="post" id="logoutForm">
+                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                            <button class="formRegistButton footerList">Log Out</button>
+                                        </sf:form>
+                                        <script type="text/javascript">
+                                            $("#logoutForm").click(function () {
+                                                $.ajax({
+                                                    url: "logoutS?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
+                                                    contentType: "application/json",
+                                                    type: "POST",
+                                                    success: function (res) {
+                                                        console.log(res);
+                                                    }
+                                                })
+                                            });
+                                        </script>
+                                    </li>
+                                </sec:authorize>
+
+                            </ul>
+
+                        </div>
+                        <div class="col-lg-6" id="searchBar">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search for..." id="searchInput">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" id="searchButton">Go!</button>
+                                    <script type="text/javascript" >
+                                         $("#searchButton").click(function(){
+                                             $("#searchInput").val("I don't want to do anything for you!");
+                                         });
+                                    </script>
                                   </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
     <input type="hidden" id="idAnimal" value="${animalSelected.id}"/>
     <input type="hidden" id="idZooOrder" value="${zooOrderSelected.id}"/>
     <div id="container">
@@ -182,6 +223,25 @@
                         <span class="selLabel" id="selLabel-forSale">${animalSelected.forSale}</span>
                         <input type="hidden" name="cd-dropdown">
                         <ul class="dropdown-list" id="dropdown-list-forSale">
+                            <li data-value="1">
+                                <span>True</span>
+                            </li>
+                            <li data-value="2">
+                                <span>False</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+<%--isAlive--%>
+                <div class="container " id="container-isAlive">
+                    <div class="selected-item" id="selected-item-isAlive">
+                        <p>You Selected sale Status : <span>${animalSelected.forSale}</span></p>
+                    </div>
+
+                    <div class="dropdown" id="isAlive">
+                        <span class="selLabel" id="selLabel-isAlive">${animalSelected.forSale}</span>
+                        <input type="hidden" name="cd-dropdown">
+                        <ul class="dropdown-list" id="dropdown-list-isAlive">
                             <li data-value="1">
                                 <span>True</span>
                             </li>
@@ -409,6 +469,16 @@
         $('#confirmButton').removeClass('invisible');
     });
 
+    $("#selLabel-isAlive").click(function () {
+        $('#isAlive').toggleClass('active');
+    });
+    $("#dropdown-list-isAlive li").click(function () {
+        $('#selLabel-isAlive').text($(this).text());
+        $('#isAlive').removeClass('active');
+        $('#selected-item-isAlive p span').text($('#selLabel-isAlive').text());
+        $('#confirmButton').removeClass('invisible');
+    });
+
     $('#confirmButton').click(function (event) {
         event.preventDefault();
 
@@ -423,6 +493,7 @@
         var imageA = $("#formUpload").hasClass("invisible");
         var idA = $("#idAnimal").val();
         var photoAdded = "false";
+        var isAliveA =  ($('#selected-item-isAlive p span').text());
         if (imageA) {
             photoAdded = "true";
         }
@@ -449,7 +520,8 @@
                                 price: priceA,
                                 forSale: forSaleA,
                                 animalType: typeA,
-                                photo: photoAdded
+                                photo: photoAdded,
+                                isAlive: isAliveA
                             };
                             $.ajax({
                                 url: "changeTheAnimal?" + $("input[name=csrf_name]").val() + "=" + $("input[name=csrf_value]").val(),
